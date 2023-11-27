@@ -1,0 +1,257 @@
+<html layout:decorate="@{mily/common/layout}" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원정보 수정 : MILY</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function checkPassword() {
+            $.ajax({
+                url: '/user/checkpassword',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify ({
+                    password: $('#password').val()
+                }),
+                success: function(response) {
+                    if (response === true) {
+                        window.location.href = '/user/mypage/edit/password';
+                    } else {
+                        // 비밀번호가 일치하지 않으면 경고 메시지 표시
+                        alert('비밀번호가 일치하지 않습니다.');
+                    }
+                }
+            });
+        }
+    </script>
+    <script>
+        var checkUserEmailDupDebounce, checkUserPhoneNumberDupDebounce;
+
+        $(document).ready(function() {
+            function checkUserEmailDup(form) {
+                form.userEmail.value = form.userEmail.value.trim();
+
+                if ( form.userEmail.value.length == 0 ) {
+                    clearUserEmailInputMsg();
+                    return;
+                }
+                if ( form.userEmail.value.length < 3 ) {
+                    clearUserEmailInputMsg();
+                    return;
+                }
+
+                if ( validUserEmail == form.userEmail.value ) return;
+                if ( lastCheckedUserEmail == form.userEmail.value ) return;
+
+                lastCheckedUserEmail = form.userEmail.value;
+                clearUserEmailInputMsg();
+
+                fetch(
+                    'checkUserEmailDup?userEmail=' + form.userEmail.value
+                )
+                    .then(res => res.json())
+                    .then((rsData) => {
+                        if ( rsData.success ) {
+                            validUserEmail = form.userEmail.value;
+                        }
+                        setUserEmailInputMsg(rsData.success, rsData.msg);
+                    });
+            }
+
+            function checkUserPhoneNumberDup(form) {
+                form.userPhoneNumber.value = form.userPhoneNumber.value.trim();
+
+                if ( form.userPhoneNumber.value.length == 0 ) {
+                    clearUserPhoneNumberInputMsg();
+                    return;
+                }
+                if ( form.userPhoneNumber.value.length < 11 ) {
+                    clearUserPhoneNumberInputMsg();
+                    return;
+                }
+
+                if ( validUserPhoneNumber == form.userPhoneNumber.value ) return;
+                if ( lastCheckedUserPhoneNumber == form.userPhoneNumber.value ) return;
+
+                lastCheckedUserPhoneNumber = form.userPhoneNumber.value;
+                clearUserPhoneNumberInputMsg();
+
+                fetch(
+                    'checkUserPhoneNumberDup?userPhoneNumber=' + form.userPhoneNumber.value
+                )
+                    .then(res => res.json())
+                    .then((rsData) => {
+                        if ( rsData.success ) {
+                            validUserPhoneNumber = form.userPhoneNumber.value;
+                        }
+                        setUserPhoneNumberInputMsg(rsData.success, rsData.msg);
+                    });
+            }
+
+            const editForm = document['edit-form'];
+            checkUserEmailDupDebounce = _.debounce(() => checkUserEmailDup(editForm), 500);
+            checkUserPhoneNumberDupDebounce = _.debounce(() => checkUserPhoneNumberDup(editForm), 500);
+
+            function clearUserEmailInputMsg() {
+                $(editForm.userEmail).removeClass('input-accent input-error');
+                $(editForm.userEmail).next().removeClass('text-green-400 text-red-400');
+                $(editForm.userEmail).next().empty();
+            }
+            function setUserEmailInputMsg(isSuccess, msg) {
+                if ( isSuccess ) $(editForm.userEmail).addClass('input-accent');
+                if ( !isSuccess ) $(editForm.userEmail).addClass('input-error');
+                $(editForm.userEmail).next().addClass(isSuccess ? 'text-green-400' : 'text-red-400');
+                $(editForm.userEmail).next().text(msg);
+            }
+            function clearUserPhoneNumberInputMsg() {
+                $(editForm.userPhoneNumber).removeClass('input-accent input-error');
+                $(editForm.userPhoneNumber).next().removeClass('text-green-400 text-red-400');
+                $(editForm.userPhoneNumber).next().empty();
+            }
+            function setUserPhoneNumberInputMsg(isSuccess, msg) {
+                if ( isSuccess ) $(editForm.userPhoneNumber).addClass('input-accent');
+                if ( !isSuccess ) $(editForm.userPhoneNumber).addClass('input-error');
+                $(editForm.userPhoneNumber).next().addClass(isSuccess ? 'text-green-400' : 'text-red-400');
+                $(editForm.userPhoneNumber).next().text(msg);
+            }
+
+            let validUserEmail = '';
+            let lastCheckedUserEmail = '';
+            let validUserPhoneNumber = '';
+            let lastCheckedUserPhoneNumber = '';
+
+            let submitEditFormDone = false;
+            function submitEditForm(form) {
+                if ( submitEditFormDone ) return;
+
+                form.userEmail.value = form.userEmail.value.trim();
+
+                if ( form.userEmail.value.length == 0 ) {
+                    form.userEmail.focus();
+                    toastWarning('이메일 입력 란을 확인해주세요.');
+                    return;
+                }
+
+                form.userPhoneNumber.value = form.userPhoneNumber.value.trim();
+
+                if ( form.userPhoneNumber.value.length == 0 ) {
+                    form.userPhoneNumber.focus();
+                    toastWarning('전화번호 입력 란을 확인해주세요.');
+                    return;
+                }
+
+                if ( validUserEmail != form.userEmail.value ) {
+                    $(form.userEmail).next().focus();
+                    toastWarning('이메일 중복 체크를 해주세요.');
+                    return;
+                }
+
+                if ( validUserPhoneNumber != form.userPhoneNumber.value ) {
+                    $(form.userPhoneNumber).next().focus();
+                    toastWarning('전화번호 중복 체크를 해주세요.');
+                    return;
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+<section layout:fragment="content">
+    <!--  메뉴바  -->
+    <div id="header_menu" class="text-lg w-full fixed top-20 left-0 bg-white z-50 h-12 border-b pt-4">
+        <div class="flex max-w-7xl m-auto justify-evenly">
+            <a th:href="@{/user/mypage/info}" class="hover:text-blue-400 text-gray-300">내 정보</a>
+            <a th:href="@{/user/mypage/edit}" class="ml-5" style="color: rgb(43, 45, 47); border-bottom: 2px solid black; padding-bottom: 3px;">계정 설정</a>
+        </div>
+    </div>
+
+    <span style="margin: 0 20%; font-size: 20px; font-weight: bold;" th:text="'비밀번호 변경'"></span>
+    <div style="display: flex; border: 1px solid #93E6FB; border-radius: 10px; margin: 5px 19.5% 15px 19.5%; padding: 15px; font-size: 16px;"
+         class="flex flex-col gap-6">
+        <form id="password-check-form" onsubmit="event.preventDefault(); checkPassword();">
+            <div style="margin: 20px 0; font-size: 16px;">
+                <span style="color: #93E6FB;" th:text="'주기적인 비밀번호 변경으로 내 정보를 보호'"></span>
+                <span style="color: #000;" th:text="'하세요.'"></span><br>
+                <span style="color: #00B869;" th:text="'다른 아이디/사이트에서 사용한 적 없는 비밀번호'"></span><br>
+                <span style="color: #00B869;" th:text="'이전에 사용한 적 없는 비밀번호'"></span>
+                <span style="color: #000;" th:text="'가 안전합니다.'"></span><br>
+            </div>
+
+            <input type="password" id="password" name="password" placeholder="현재 비밀번호" class="input input-bordered"
+                   maxlength="30"
+                   style="width: 125px; height: 30px; margin-bottom: 20px; border: 1px solid #93E6FB; border-radius: 10px 0 0 10px; margin-right: -4.4px;">
+            <input type="submit" value="확인"
+                   style="height: 30px; border: 1px solid #93E6FB; border-radius: 0 10px 10px 0; padding: 0 10px; background-color: #93E6FB;">
+        </form>
+    </div>
+
+    <span style="margin: 0 20%; font-size: 20px; font-weight: bold;" th:text="'회원 정보 수정'"></span>
+    <div style="display: flex; border: 1px solid #93E6FB; border-radius: 10px; margin: 5px 19.5% 15px 19.5%; padding: 15px; font-size: 16px;"
+         class="flex flex-col gap-6">
+        <form th:action method="POST" name="edit-form" onsubmit="submitEditForm(this); return false;">
+            <div style="display: flex; flex-direction: column;">
+                <span th:text="'이메일 (' + ${user.userEmail} + ')'" style="font-size: 17px; margin-left: 25%;"></span>
+                <input type="email" id="userEmail" name="userEmail" th:placeholder="'변경할 이메일'"
+                       onchange="$(this).keyup();"
+                       onpaste="setTimeoutZero(() => $(this).keyup());"
+                       onkeyup="checkUserEmailDupDebounce();"
+                       style="border: 1px solid #c8c8c8; border-radius: 10px; padding: 10px; margin: 0 25%;">
+                <div class="text-sm" style="display: flex; justify-content: center; height: 20px;"></div>
+                <span th:text="'전화번호 (' + ${user.userPhoneNumber} + ')'" style="font-size: 17px; margin-left: 25%;"></span>
+                <input type="text" id="userPhoneNumber" name="userPhoneNumber" th:placeholder="'변경할 전화번호'"
+                       onchange="$(this).keyup();"
+                       onpaste="setTimeoutZero(() => $(this).keyup());"
+                       onkeyup="checkUserPhoneNumberDupDebounce();"
+                       style="border: 1px solid #c8c8c8; border-radius: 10px; padding: 10px; margin: 0 25%;">
+                <div class="text-sm" style="display: flex; justify-content: center; height: 20px;"></div>
+            </div>
+
+            <div style="display: flex; justify-content: space-around; padding-top: 20px; margin-top: 20px; border-top: 1px solid #93E6FB;">
+                <button>
+                    <i class="fa-solid fa-rotate">
+                        <span>변경하기</span>
+                    </i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <span style="margin: 0 20%; font-size: 20px; font-weight: bold;" th:text="'정보 수신/제공'"></span>
+    <div style="display: flex; flex-direction: column; border: 1px solid #93E6FB; border-radius: 10px; margin: 5px 19.5% 15px 19.5%; padding: 15px; font-size: 16px;">
+        <span>프로모션 정보 수신 동의</span>
+        <div style="display: flex; justify-content: space-between; margin: 1px 0;">
+            <i class="fa-solid fa-mobile-button" style="width: 88px; text-align: center;">
+                <span th:text="' 휴대전화'"></span>
+            </i>
+            <input type="checkbox" class="toggle toggle-info" checked>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin: 1px 0;">
+            <i class="fa-solid fa-envelope" style="width: 72px; text-align: center;">
+                <span th:text="'이메일'"></span>
+            </i>
+            <input type="checkbox" class="toggle toggle-info">
+        </div>
+        <br>
+
+        <span>마케팅 정보 수신 동의</span>
+        <div style="display: flex; justify-content: space-between; margin: 1px 0;">
+            <i class="fa-solid fa-mobile-button" style="width: 88px; text-align: center;">
+                <span th:text="' 휴대전화'"></span>
+            </i>
+            <input type="checkbox" class="toggle toggle-info">
+        </div>
+        <div style="display: flex; justify-content: space-between; margin: 1px 0;">
+            <i class="fa-solid fa-envelope" style="width: 72px; text-align: center;">
+                <span th:text="'이메일'"></span>
+            </i>
+            <input type="checkbox" class="toggle toggle-info">
+        </div>
+    </div>
+
+    <a target="_blank" th:href="@{/user/mypage/withdraw}" style="margin: 0 20%;">
+        <i class="fa-solid fa-delete-left" style="width: 18px; text-align: center;"></i>
+        회원 탈퇴</a>
+    <section th:replace="mily/common/footer :: footer"></section>
+</section>
+</body>
+</html>

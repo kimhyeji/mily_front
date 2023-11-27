@@ -1,0 +1,136 @@
+<html layout:decorate="@{mily/common/layout}" lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <title>로그인 : MILY</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <div class="find_wrap">
+        <div class="max-w-2xl mx-auto px-28 py-20 mt-28 mb-20 border">
+            <div class="mb-10 text-2xl font-bold text-center">
+                로그인
+            </div>
+
+            <form th:action method="POST" onsubmit="submitLoginForm(this); return false;"
+                  class="flex flex-col gap-6">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text text-xs">아이디</span>
+                    </label>
+
+                    <input type="text" name="userLoginId" placeholder="아이디" class="input input-bordered" autofocus
+                           maxlength="30">
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text text-xs">비밀번호</span>
+                    </label>
+
+                    <input type="password" name="userPassword" placeholder="비밀번호" class="input input-bordered"
+                           maxlength="50">
+                </div>
+
+                <div class="find_btn_wrap mt-28">
+                    <button class="btn btn-block btn-primary mb-5">
+                        <span>로그인</span>
+                    </button>
+
+                    <div class="text-center">
+                        <a href="/user/signup" class="text-gray-300 text-xs underline hover:text-blue-400">회원가입</a>
+                        <a href="/user/findId" class="text-gray-300 text-xs mx-3 underline hover:text-blue-400">아이디
+                            찾기</a>
+                        <a href="/user/findPassword" class="text-gray-300 text-xs underline hover:text-blue-400">비밀번호
+                            찾기</a>
+                    </div>
+                </div>
+            </form>
+
+            <div class="h_bottom"></div>
+        </div>
+    </div>
+
+    <style>
+        .input:focus, .input:focus-within {
+          outline: none;
+        }
+
+        .find_wrap {
+          width: 1280px;
+        }
+
+        .find_btn_wrap .btn {
+          background-color: #fff;
+          border: 2px solid #309cff;
+          border-radius: 10px;
+          color: #309cff;
+          padding: 10px 80px;
+        }
+
+        .find_btn_wrap .btn:hover {
+          border: 2px solid #87bbfa;
+          color: #87bbfa;
+        }
+
+        @media (max-width: 360px) {
+          .find_wrap {
+            max-width: var(--m_width);
+          }
+
+          .find_wrap > div {
+            border: none;
+            padding: 0;
+            margin-top: 70px;
+          }
+
+          .find_btn_wrap {
+            margin-top: 30px;
+          }
+
+          .h_bottom {
+            height: 20px;
+          }
+        }
+    </style>
+
+    <script>
+        let submitLoginFormDone = false;
+        function submitLoginForm(form) {
+            if ( submitLoginFormDone ) return;
+
+            form.userLoginId.value = form.userLoginId.value.trim();
+
+            if ( form.userLoginId.value.length == 0 ) {
+                form.userLoginId.focus();
+                toastWarning('아이디 입력 란을 확인해주세요.');
+                return;
+            }
+            if ( form.userLoginId.value.length < 8 ) {
+                form.userLoginId.focus();
+                toastWarning('아이디는 최소 8글자 이상입니다.');
+                return;
+            }
+
+            form.userPassword.value = form.userPassword.value.trim();
+
+            if ( form.userPassword.value.length == 0 ) {
+                form.userPassword.focus();
+                toastWarning('비밀번호 입력 란을 확인해주세요.');
+                return;
+            }
+            if ( form.userPassword.value.length < 8 ) {
+                form.userPassword.focus();
+                toastWarning('비밀번호는 최소 8글자 이상입니다.');
+                return;
+            }
+
+            form.submit();
+            submitLoginFormDone = true;
+        }
+    </script>
+</div>
+
+</body>
+</html>

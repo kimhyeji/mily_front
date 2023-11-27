@@ -1,0 +1,97 @@
+<html layout:decorate="@{mily/common/layout}" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Mily > Mily X 질문</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<div class="flex-1 flex items-center justify-center" layout:fragment="content">
+    <div class="container w-full px-4">
+        <div style="display: flex !important;" class="my-4 justify-center">
+            <i class="fa-solid fa-pen"></i>
+            <span>글 수정</span>
+        </div>
+
+        <form class="flex flex-col gap-6" method="POST" onsubmit="submitModifyForm(this); return false;"
+              th:action="@{|/milyx/modify/${milyx.id}|}">
+            <div class="form-control">
+                <span>
+                    선택한 대분류 :
+                    <span th:text="${milyx.firstCategory.title}"></span>
+                </span>
+
+                <span>
+                    선택한 소분류 :
+                    <span th:text="${milyx.secondCategory.title}"></span>
+                </span>
+
+                <span>
+                    사용한 포인트 :
+                    <span th:text="${milyx.milyPoint}"></span>
+                </span>
+
+                <label class="label">
+                    <span class="label-text">제목</span>
+                </label>
+                <input class="input input-bordered" maxlength="100"
+                       name="subject" id="subject" th:placeholder="${milyx.subject}" type="text">
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">내용</span>
+                </label>
+                <textarea class="textarea textarea-bordered h-[calc(100vh-450px)] min-h-[100px]" maxlength="20000"
+                          name="body" id="body" th:placeholder="${milyx.body}"
+                ></textarea>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <button class="btn btn-block btn-primary gap-1">
+                    <i class="fa-solid fa-pen"></i>
+                    <span>글쓰기</span>
+                </button>
+            </div>
+        </form>
+
+        <script>
+            let submitModifyFormDone = false;
+
+            function submitModifyForm(form) {
+                if (submitModifyFormDone) return;
+                form.subject.value = form.subject.value.trim();
+
+                if (form.subject.value.length == 0) {
+                    form.subject.focus();
+                    toastWarning('제목을 입력해주세요.');
+                    return;
+                }
+
+                if (form.subject.value.length < 10) {
+                    form.subject.focus();
+                    toastWarning('제목을 10글자 이상 입력해주세요.');
+                    return;
+                }
+
+                form.body.value = form.body.value.trim();
+
+                if (form.body.value.length == 0) {
+                    form.body.focus();
+                    toastWarning('내용을 입력해주세요.');
+                    return;
+                }
+
+                if (form.body.value.length < 30) {
+                    form.body.focus();
+                    toastWarning('내용을 30자 이상 입력해주세요.');
+                    return;
+                }
+
+                form.submit();
+                submitModifyFormDone = true;
+            }
+        </script>
+    </div>
+</div>
+</body>
+</html>

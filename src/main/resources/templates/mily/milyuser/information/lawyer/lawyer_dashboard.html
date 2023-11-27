@@ -1,0 +1,95 @@
+<html layout:decorate="@{mily/common/layout}" lang="ko">
+<head>
+    <title>변호사 대시보드 : MILY</title>
+</head>
+
+<body>
+
+<section layout:fragment="content">
+    <div class="flex justify-center">
+        <i class="fa-solid fa-user">내 정보</i>
+
+        <div class="card bg-base-100 shadow-xl">
+
+            <div class="card-body">
+                <h2 class="card-title mb-4">프로필 이미지</h2>
+
+                <div class="detail flex flex-col gap-3">
+                    <div class="form-control">
+                        <div class="flex justify-center">
+                            <img class="w-40 h-40 rounded-full" th:src="${@rq.profileImgUrl}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="display:flex; margin: 20px 0 10px 0;">
+        <span th:if="${commentsCount < 0}" th:text="'작성한 답변이 없습니다.'"></span>
+        <span th:if="${commentsCount > 0}" th:text="'내가 쓴 답변 ' + ${commentsCount} + '개'"></span>
+    </div>
+
+    <div class="flex" style="flex-direction: column">
+        <table style="border: 1px solid #c8c8c8;">
+            <thead>
+            <tr>
+                <th style="border-right: 1px solid #c8c8c8;">번호</th>
+                <th style="border-right: 1px solid #c8c8c8;">질문 제목</th>
+                <th style="border-right: 1px solid #c8c8c8;">답변 내용</th>
+                <th style="border-right: 1px solid #c8c8c8;">답변 시간</th>
+                <th>채택 여부</th>
+            </tr>
+            </thead>
+
+            <tbody style="border: 1px solid #c8c8c8; text-align: center;">
+            <tr th:each="comments: ${comments}">
+                <td th:text="${comments.id}" style="border-right: 1px solid #c8c8c8;"></td>
+                <td style="border-right: 1px solid #c8c8c8;">
+                    <a th:href="@{milyx/detail/{id}(id=${comments.milyX.id})}" target="_blank" th:text="${#strings.abbreviate(comments.milyX.subject, 18)}" style="font-weight: bold;"></a>
+                </td>
+                <td th:text="${#strings.abbreviate(comments.body, 18)}" style="border-right: 1px solid #c8c8c8;"></td>
+                <td th:text="${#temporals.format(comments.createDate, 'MM월 dd일 HH시 mm분')}" style="border-right: 1px solid #c8c8c8;"></td>
+                <td>
+                    <span th:unless="${comments.adopt}">X</span>
+                    <span th:if="${comments.adopt}">O</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="display:flex; margin: 20px 0 10px 0;">
+        <span th:if="${estimatesCount < 0}" th:text="'견적서가 없습니다.'"></span>
+        <span th:if="${estimatesCount > 0}" th:text="'견적서 ' + ${estimatesCount} + '건이 대기 중입니다.'"></span>
+    </div>
+    <div class="flex" style="flex-direction: column">
+        <table style="border: 1px solid #c8c8c8;">
+            <thead>
+                <tr>
+                    <th style="border-right: 1px solid #c8c8c8;">번호</th>
+                    <th style="border-right: 1px solid #c8c8c8;">1차 카테고리</th>
+                    <th style="border-right: 1px solid #c8c8c8;">2차 카테고리</th>
+                    <th style="border-right: 1px solid #c8c8c8;">지역</th>
+                    <th style="border-right: 1px solid #c8c8c8;">작성자</th>
+                    <th style="border-right: 1px solid #c8c8c8;">작성자 전화번호</th>
+                    <th>작성일</th>
+                </tr>
+            </thead>
+            <tbody style="border: 1px solid #c8c8c8; text-align: center;">
+                <tr th:each="estimate: ${estimate}">
+                    <td th:text="${estimate.id}" style="border-right: 1px solid #c8c8c8;"></td>
+                    <td th:text="${estimate.category}" style="border-right: 1px solid #c8c8c8;"></td>
+                    <td th:text="${estimate.categoryItem}" style="border-right: 1px solid #c8c8c8;"></td>
+                    <td th:text="${estimate.area}" style="border-right: 1px solid #c8c8c8;"></td>
+                    <td th:text="${estimate.name}" style="border-right: 1px solid #c8c8c8;"></td>
+                    <td th:text="${estimate.phoneNumber}" style="border-right: 1px solid #c8c8c8;"></td>
+                    <td th:text="${#temporals.format(estimate.createDate, 'MM월 dd일 HH시 mm분')}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,448 @@
+<html layout:decorate="@{mily/common/layout}" lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <title>회원가입 : MILY</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <div class="find_wrap">
+        <div class="max-w-2xl mx-auto px-28 py-20 mt-28 mb-20 border">
+            <div class="other_signup">
+                <span>변호사 인가요?</span>
+                <br>
+                <a href="/user/lawyerSignup" class="hover:text-blue-400">변호사 회원가입 <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="mb-10 text-2xl font-bold text-center">
+                일반 회원가입
+            </div>
+
+            <form th:action method="POST" name="signup-form" onsubmit="submitSignupForm(this); return false;"
+                  class="flex flex-col gap-6">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text text-xs">아이디</span>
+                    </label>
+                    <input type="text" name="userLoginId" placeholder="아이디" class="input input-bordered" autofocus
+                           maxlength="12" onchange="$(this).keyup();" onpaste="setTimeoutZero(() => $(this).keyup());"
+                           onkeyup="checkUserLoginIdDupDebounce();">
+                    <div class="mt-2 text-sm"></div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text text-xs">비밀번호</span>
+                    </label>
+                    <input type="password" name="userPassword" placeholder="비밀번호" class="input input-bordered"
+                           maxlength="30">
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text text-xs">비밀번호 확인</span>
+                    </label>
+                    <input type="password" name="userPassword2" placeholder="비밀번호 확인" class="input input-bordered"
+                           maxlength="30">
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text text-xs">이름</span>
+                    </label>
+                    <input type="text" name="userName" placeholder="이름" class="input input-bordered" autofocus
+                           maxlength="30">
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text text-xs">이메일</span>
+                    </label>
+                    <input type="email" name="userEmail" placeholder="이메일" class="input input-bordered" autofocus
+                           maxlength="30" onchange="$(this).keyup();" onpaste="setTimeoutZero(() => $(this).keyup());"
+                           onkeyup="checkUserEmailDupDebounce();">
+                    <div class="mt-2 text-sm"></div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text text-xs">전화번호</span>
+                    </label>
+                    <input type="tel" name="userPhoneNumber" placeholder="'-' 없이 입력해주세요." class="input input-bordered"
+                           autofocus
+                           maxlength="11" onchange="$(this).keyup();" onpaste="setTimeoutZero(() => $(this).keyup());"
+                           onkeyup="checkUserPhoneNumberDupDebounce();">
+                    <div class="mt-2 text-sm"></div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text text-xs">생년월일</span>
+                    </label>
+                    <input type="date" name="userDateOfBirth" placeholder="생년월일" class="input input-bordered" autofocus
+                           maxlength="30">
+                </div>
+
+                <div class="find_btn_wrap mt-8">
+                    <button class="btn btn-block btn-primary mb-5">
+                        <span>가입하기</span>
+                    </button>
+
+                    <div class="text-center">
+                        <a href="/user/login" class="text-gray-300 text-xs underline hover:text-blue-400">로그인</a>
+                        <a href="/user/findId" class="text-gray-300 text-xs mx-3 underline hover:text-blue-400">아이디
+                            찾기</a>
+                        <a href="/user/findPassword" class="text-gray-300 text-xs underline hover:text-blue-400">비밀번호
+                            찾기</a>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <style>
+        .input:focus, .input:focus-within {
+          outline: none;
+        }
+
+        .find_wrap {
+          width: 1280px;
+          position: relative;
+        }
+
+        .find_btn_wrap .btn {
+          background-color: #fff;
+          border: 2px solid #309cff;
+          border-radius: 10px;
+          color: #309cff;
+          padding: 10px 80px;
+        }
+
+        .find_btn_wrap .btn:hover {
+          border: 2px solid #87bbfa;
+          color: #87bbfa;
+        }
+
+        .other_signup {
+            text-align: right;
+            width: 450px;
+            position: absolute;
+            top: 20px;
+            right: 330px;
+            color: gray;
+            font-size: 14px;
+        }
+
+        @media (max-width: 360px) {
+          .find_wrap {
+            max-width: var(--m_width);
+            position: relative;
+          }
+
+          .find_wrap > div {
+            border: none;
+            padding: 0;
+            margin-top: 70px;
+          }
+
+          .find_btn_wrap {
+            margin-top: 30px;
+          }
+
+          .h_bottom {
+            height: 20px;
+          }
+
+          .other_signup {
+            width: 100%;
+            position: absolute;
+            left: 0;
+            top: -65px;
+            color: gray;
+            font-size: 12px;
+          }
+
+          .other_signup span {
+            display: none;
+          }
+        }
+    </style>
+
+    <script>
+        function checkUserLoginIdDup(form) {
+            form.userLoginId.value = form.userLoginId.value.trim();
+
+            if ( form.userLoginId.value.length == 0 ) {
+                clearUserLoginIdInputMsg();
+                return;
+            }
+            if ( form.userLoginId.value.length < 8 ) {
+                clearUserLoginIdInputMsg();
+                return;
+            }
+
+            if ( validUserLoginId == form.userLoginId.value ) return;
+            if ( lastCheckedUserLoginId == form.userLoginId.value ) return;
+
+            lastCheckedUserLoginId = form.userLoginId.value;
+
+            clearUserLoginIdInputMsg();
+
+            fetch(
+                'checkUserLoginIdDup?userLoginId=' + form.userLoginId.value
+            )
+                .then(res => res.json())
+                .then((rsData) => {
+                    if ( rsData.success ) {
+                        validUserLoginId = form.userLoginId.value;
+                    }
+                    setUserLoginIdInputMsg(rsData.success, rsData.msg);
+                });
+
+        }
+
+        function checkUserEmailDup(form) {
+            form.userEmail.value = form.userEmail.value.trim();
+
+            if ( form.userEmail.value.length == 0 ) {
+                clearUserEmailInputMsg();
+                return;
+            }
+            if ( form.userEmail.value.length < 3 ) {
+                clearUserEmailInputMsg();
+                return;
+            }
+
+            if ( validUserEmail == form.userEmail.value ) return;
+            if ( lastCheckedUserEmail == form.userEmail.value ) return;
+
+            lastCheckedUserEmail = form.userEmail.value;
+
+            clearUserEmailInputMsg();
+
+            fetch(
+                'checkUserEmailDup?userEmail=' + form.userEmail.value
+            )
+                .then(res => res.json())
+                .then((rsData) => {
+                    if ( rsData.success ) {
+                        validUserEmail = form.userEmail.value;
+                    }
+                    setUserEmailInputMsg(rsData.success, rsData.msg);
+                });
+
+        }
+
+        function checkUserPhoneNumberDup(form) {
+            form.userPhoneNumber.value = form.userPhoneNumber.value.trim();
+
+            if ( form.userPhoneNumber.value.length == 0 ) {
+                clearUserPhoneNumberInputMsg();
+                return;
+            }
+            if ( form.userPhoneNumber.value.length < 11 ) {
+                clearUserPhoneNumberInputMsg();
+                return;
+            }
+
+            if ( validUserPhoneNumber == form.userPhoneNumber.value ) return;
+            if ( lastCheckedUserPhoneNumber == form.userPhoneNumber.value ) return;
+
+            lastCheckedUserPhoneNumber = form.userPhoneNumber.value;
+
+            clearUserPhoneNumberInputMsg();
+
+            fetch(
+                'checkUserPhoneNumberDup?userPhoneNumber=' + form.userPhoneNumber.value
+            )
+                .then(res => res.json())
+                .then((rsData) => {
+                    if ( rsData.success ) {
+                        validUserPhoneNumber = form.userPhoneNumber.value;
+                    }
+                    setUserPhoneNumberInputMsg(rsData.success, rsData.msg);
+                });
+
+        }
+
+        const signupForm = document['signup-form'];
+        const checkUserLoginIdDupDebounce = _.debounce(() => checkUserLoginIdDup(signupForm), 500);
+        const checkUserNickNameDupDebounce = _.debounce(() => checkUserNickNameDup(signupForm), 500);
+        const checkUserEmailDupDebounce = _.debounce(() => checkUserEmailDup(signupForm), 500);
+        const checkUserPhoneNumberDupDebounce = _.debounce(() => checkUserPhoneNumberDup(signupForm), 500);
+
+        function clearUserLoginIdInputMsg() {
+            $(signupForm.userLoginId).removeClass('input-accent input-error');
+            $(signupForm.userLoginId).next().removeClass('text-green-400 text-red-400');
+            $(signupForm.userLoginId).next().empty();
+        }
+        function setUserLoginIdInputMsg(isSuccess, msg) {
+            if ( isSuccess ) $(signupForm.userLoginId).addClass('input-accent');
+            if ( !isSuccess ) $(signupForm.userLoginId).addClass('input-error');
+
+            $(signupForm.userLoginId).next().addClass(isSuccess ? 'text-green-400' : 'text-red-400');
+            $(signupForm.userLoginId).next().text(msg);
+        }
+
+        function clearUserNickNameInputMsg() {
+            $(signupForm.userNickName).removeClass('input-accent input-error');
+            $(signupForm.userNickName).next().removeClass('text-green-400 text-red-400');
+            $(signupForm.userNickName).next().empty();
+        }
+        function setUserNickNameInputMsg(isSuccess, msg) {
+            if ( isSuccess ) $(signupForm.userNickName).addClass('input-accent');
+            if ( !isSuccess ) $(signupForm.userNickName).addClass('input-error');
+
+            $(signupForm.userNickName).next().addClass(isSuccess ? 'text-green-400' : 'text-red-400');
+            $(signupForm.userNickName).next().text(msg);
+        }
+
+        function clearUserEmailInputMsg() {
+            $(signupForm.userEmail).removeClass('input-accent input-error');
+            $(signupForm.userEmail).next().removeClass('text-green-400 text-red-400');
+            $(signupForm.userEmail).next().empty();
+        }
+        function setUserEmailInputMsg(isSuccess, msg) {
+            if ( isSuccess ) $(signupForm.userEmail).addClass('input-accent');
+            if ( !isSuccess ) $(signupForm.userEmail).addClass('input-error');
+
+            $(signupForm.userLEmail).next().addClass(isSuccess ? 'text-green-400' : 'text-red-400');
+            $(signupForm.userEmail).next().text(msg);
+        }
+
+        function clearUserPhoneNumberInputMsg() {
+            $(signupForm.userPhoneNumber).removeClass('input-accent input-error');
+            $(signupForm.userPhoneNumber).next().removeClass('text-green-400 text-red-400');
+            $(signupForm.userPhoneNumber).next().empty();
+        }
+        function setUserPhoneNumberInputMsg(isSuccess, msg) {
+            if ( isSuccess ) $(signupForm.userPhoneNumber).addClass('input-accent');
+            if ( !isSuccess ) $(signupForm.userPhoneNumber).addClass('input-error');
+
+            $(signupForm.userPhoneNumber).next().addClass(isSuccess ? 'text-green-400' : 'text-red-400');
+            $(signupForm.userPhoneNumber).next().text(msg);
+        }
+
+        let validUserLoginId = '';
+        let lastCheckedUserLoginId = '';
+        let lastCheckedUserNickName = '';
+        let validUserEmail = '';
+        let lastCheckedUserEmail = '';
+        let validUserPhoneNumber = '';
+        let lastCheckedUserPhoneNumber = '';
+        let validArea = '';
+
+        let submitSignupFormDone = false;
+        function submitSignupForm(form) {
+            if ( submitSignupFormDone ) return;
+
+            form.userLoginId.value = form.userLoginId.value.trim();
+
+            if ( form.userLoginId.value.length == 0 ) {
+                form.userLoginId.focus();
+                toastWarning('아이디 입력 란을 확인해주세요.');
+                return;
+            }
+            if ( form.userLoginId.value.length < 8 ) {
+                form.userLoginId.focus();
+                toastWarning('아이디는 최소 8글자 이상이어야 합니다.');
+                return;
+            }
+
+            form.userPassword.value = form.userPassword.value.trim();
+
+            if ( form.userPassword.value.length == 0 ) {
+                form.userPassword.focus();
+                toastWarning('비밀번호 입력 란을 확인해주세요.');
+                return;
+            }
+
+            form.userPassword2.value = form.userPassword2.value.trim();
+
+            if ( form.userPassword2.value.length == 0 ) {
+                form.userPassword2.focus();
+                toastWarning('비밀번호 확인 입력 란을 확인해주세요.');
+                return;
+            }
+            if ( form.userPassword.value != form.userPassword2.value ) {
+                form.userPassword2.focus();
+                toastWarning('두 개의 비밀번호가 일치하지 않습니다.');
+                return;
+            }
+
+            form.userNickName.value = form.userNickName.value.trim();
+
+            if ( form.userName.value.length == 0 ) {
+                form.userName.focus();
+                toastWarning('이름 입력 란을 확인해주세요.');
+                return;
+            }
+
+            form.userEmail.value = form.userEmail.value.trim();
+
+            if ( form.userEmail.value.length == 0 ) {
+                form.userEmail.focus();
+                toastWarning('이메일 입력 란을 확인해주세요.');
+                return;
+            }
+
+            form.userPhoneNumber.value = form.userPhoneNumber.value.trim();
+
+            if ( form.userPhoneNumber.value.length == 0 ) {
+                form.userPhoneNumber.focus();
+                toastWarning('전화번호 입력 란을 확인해주세요.');
+                return;
+            }
+
+
+            form.userDateOfBirth.value = form.userDateOfBirth.value.trim();
+
+            if ( form.userDateOfBirth.value.length == 0 ) {
+                form.userDateOfBirth.focus();
+                toastWarning('생년월일 입력 란을 확인해주세요.');
+                return;
+            }
+
+            if ( validUserLoginId != form.userLoginId.value ) {
+                $(form.userLoginId).next().focus();
+                toastWarning('아이디 중복 체크를 해주세요.');
+                return;
+            }
+
+            if ( validUserNickName != form.userNickName.value ) {
+                $(form.userNickName).next().focus();
+                toastWarning('닉네임 중복 체크를 해주세요.');
+                return;
+            }
+
+            if ( validUserEmail != form.userEmail.value ) {
+                $(form.userEmail).next().focus();
+                toastWarning('이메일 중복 체크를 해주세요.');
+                return;
+            }
+
+            if ( validUserPhoneNumber != form.userPhoneNumber.value ) {
+                $(form.userPhoneNumber).next().focus();
+                toastWarning('전화번호 중복 체크를 해주세요.');
+                return;
+            }
+
+            form.area.value = form.area.value.trim();
+
+            if ( form.area.value.length == 0 ) {
+                form.area.focus();
+                toastWarning('지역 입력 란을 확인해주세요.');
+                return;
+            }
+
+            form.submit();
+            submitSignupFormDone = true;
+        }
+    </script>
+</div>
+
+</body>
+</html>

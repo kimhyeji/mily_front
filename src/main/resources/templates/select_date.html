@@ -1,0 +1,214 @@
+<html layout:decorate="@{mily/common/layout}" lang="ko" data-theme="winter">
+<head>
+    <title>상담 예약 : MILY</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<div>
+    <div layout:fragment="content">
+
+        <div style="margin: 80px 0 40px 0; display: flex; justify-content: center;">
+            <span style="font-size: 28px; font-weight: 600;">상담 예약</span>
+        </div>
+
+        <!-- 전체 -->
+        <div style="width: 768px;">
+            <div>
+                <div style="border: 1px solid #35373A; border-radius: 15px 15px 0 0; background-color: #35373A; color: #fff;">
+                    <div th:text="${user.userName} + ' 변호사'" style="margin: 15px 0 0 30px; font-size: 20px;"></div>
+                    <div th:text="${user.lawyerUser.officeAddress}"
+                         style="margin: 0 0 15px 30px; font-size: 14px;"></div>
+                </div>
+                <div>
+                    <img th:src="${user.lawyerUser.profileImgFilePath}" style="border: 1px solid #35373A; border-radius: 0 0 15px 15px; width: 768px; height: 460px;">
+                </div>
+            </div>
+
+            <form id="myForm" th:action="@{/reservation/result}" method="get">
+                <!-- 변호사 -->
+                <input type="hidden" id="lawyerUserId" name="lawyerUserId" th:value="${lawyerUserId}">
+
+                <!-- 상담 예약 -->
+                <input type="hidden" id="consultation" name="consultation">
+
+                <!-- 날짜 선택 -->
+                <input type="hidden" id="selectedDate" name="selectedDate">
+
+                <!-- 시간 선택 -->
+                <input type="hidden" id="selectedTime" name="selectedTime">
+
+                <!-- accordion div -->
+                <div style="border: 1px solid #1C1B1F; border-radius: 15px; margin-top: 40px;" id="submitBtnHere">
+                    <div class="collapse collapse-arrow"
+                         style="border-bottom: 1px solid #DCDCDC; border-radius: 0; width: 90%; margin: 10px 5%;">
+                        <input type="radio" name="my-accordion-2" checked="checked"/>
+                        <div class="collapse-title">
+                            상담 예약
+                        </div>
+                        <div class="collapse-content"
+                             style="display: flex; justify-content: space-around; text-align: center;  margin: 15px 0;">
+                            <button id="consultation30" type="button"
+                                    style="width: 150px; border: 1px solid #DCDCDC; padding: 10px; border-radius: 10px;"
+                                    th:value="'30분 상담'" th:text="'30분 상담'"></button>
+                            <button id="consultation60" type="button"
+                                    style="width: 150px; border: 1px solid #DCDCDC; padding: 10px; border-radius: 10px;"
+                                    th:value="'60분 상담'" th:text="'60분 상담'"></button>
+                        </div>
+                    </div>
+                    <div class="collapse collapse-arrow"
+                         style="border-bottom: 1px solid #DCDCDC; border-radius: 0; width: 90%; margin: 10px 5%;">
+                        <input type="radio" name="my-accordion-2"/>
+                        <div class="collapse-title">
+                            날짜 선택
+                        </div>
+                        <div class="collapse-content">
+                            <div style="display: flex; flex-direction: column;">
+                                <div style=" display: inline-flex; justify-content: space-around; text-align: center; margin: 15px 0;">
+                                        <button th:id="'selectedDate' + ${stat.index}" type="button" name="date" th:each="dates, stat: ${dates}" th:value="${dates}" th:text="${dates}"
+                                                style="width: 50px; height: 50px; background-color: rgba(0, 0, 0, 0.1); border-radius: 20px;"></button>
+                                </div>
+                                <div style="display: flex; justify-content: space-around; text-align: center; margin: 15px 0;">
+                                    <span th:each="day, stat : ${day}"
+                                          th:style="${stat.index == 0} ? 'color:#75BDFF; width:80px;' : 'width:80px;' "
+                                          th:text="${day}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="collapse collapse-arrow" style=" border-radius: 0; width: 90%; margin: 10px 5%;">
+                        <input type="radio" name="my-accordion-2"/>
+                        <div class="collapse-title">
+                            시간 선택
+                        </div>
+                        <div class="collapse-content">
+                            <div style="display: flex; flex-wrap: wrap; justify-content: space-around; margin: 15px 0;" id="ajaxContent">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <script th:inline="javascript">
+                window.onload = function() {
+                    let consultationButtons = document.querySelectorAll("#consultation30, #consultation60");
+                    let buttons = document.querySelectorAll("button[name='date']");
+                    let lawyerUserId = document.getElementById("lawyerUserId").value;
+
+                    consultationButtons.forEach(function(button) {
+                        button.addEventListener("click", function() {
+                            // 클릭된 버튼의 텍스트 값을 'consultation' input 필드에 설정합니다.
+                            let consultationInput = $("#consultation");
+                            consultationInput.val($(this).text()).trigger('change');
+                        });
+                    });
+
+                    var times = ['09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
+                    var ajaxContent = document.getElementById('ajaxContent');
+
+                    for(var i = 0; i < times.length; i++) {
+                        var button = document.createElement('button');
+                        button.id = 'selectedTime' + i;
+                        button.type = 'button';
+                        button.style.width = '100px';
+                        button.style.margin = '10px 20px';
+                        button.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
+                        button.style.padding = '10px';
+                        button.style.borderRadius = '10px';
+                        button.innerHTML = times[i];
+
+                        ajaxContent.appendChild(button);
+                    }
+
+                    buttons.forEach(function(button) {
+                        button.addEventListener("click", function() {
+                            // 모든 버튼을 원래 스타일로 돌려놓습니다.
+                            buttons.forEach(function(btn) {
+                                btn.style.border = "transparent";
+                                btn.style.backgroundColor = "rgba(0, 0, 0, 0.1)";
+                            });
+
+                            // 클릭된 버튼의 스타일만 변경합니다.
+                            this.style.border = "3px solid #75BDFF";
+                            this.style.backgroundColor = "transparent";
+
+                            let selectedDateInput = $("#selectedDate");
+                            selectedDateInput.val($(this).text()).trigger('change');
+
+                            var id = this.id;
+
+                            $.ajax({
+                                url: '/reservation/getAvailableTimes?lawyerUserId=' + lawyerUserId,
+                                type: 'GET',
+                                data: {
+                                    'id': id
+                                },
+                                success: function(data) {
+                                    var times = ['09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
+                                    var j = 0;
+                                        for (var i = 0; i < times.length; i++) {
+                                        var time = data[j].split('T')[1].substring(0, 5);
+                                        if (times[i] === time) {
+                                            let buttonId = 'selectedTime' + i;
+                                            let button = document.getElementById(buttonId);
+                                            if (button) {
+                                                button.style.border = "2px solid #75BDFF";
+                                                button.style.backgroundColor = "#FFF";
+
+                                                button.addEventListener("click", function() {
+                                                    // 클릭된 버튼의 텍스트 값을 'selectedTime' input 필드에 설정합니다.
+                                                    let selectedTimeInput = $("#selectedTime");
+                                                    selectedTimeInput.val($(this).text()).trigger('change');
+                                                });
+                                            }
+                                            j++;
+                                        } else {
+                                            let buttonId = 'selectedTime' + i;
+                                            let button = document.getElementById(buttonId);
+                                            if (button) {
+                                                button.style.border = "transparent";
+                                                button.style.backgroundColor = "rgba(0, 0, 0, 0.1)";
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        });
+                    });
+                };
+            </script>
+        </div>
+        <script>
+            $(document).ready(function() {
+                const formTag = $("#myForm");
+                const consultationInput = $("#consultation");
+                const selectedDateInput = $("#selectedDate");
+                const selectedTimeInput = $("#selectedTime");
+
+                [consultationInput, selectedDateInput, selectedTimeInput].forEach(function(input) {
+                    input.change(function() {
+                        let isAllSet = true;
+                        [consultationInput, selectedDateInput, selectedTimeInput].forEach(function(input) {
+                            if (!input.val()) {
+                                isAllSet = false;
+                            }
+                        });
+
+                        if (isAllSet) {
+                            const htmlToAdd = `
+                                <div class="collapse collapse">
+                                    <input type="radio" name="my-accordion-2" checked="checked" />
+                                    <div class="collapse-title"></div>
+                                    <button class="collapse-content" type="submit" style="background-color: #75BDFF; padding: 10px 0; border-radius: 15px;">
+                                        <span style="color: #fff; font-size: 20px;">예약하기</span>
+                                    </button>
+                                </div>
+                            `;
+                            $(".collapse-content:last").after(htmlToAdd);
+                        }
+                    });
+                });
+            });
+        </script>
+    </div>
+</div>
+</body>
+</html>

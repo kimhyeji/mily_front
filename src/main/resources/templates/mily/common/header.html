@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header
+        th:fragment="headerFragment"
+        id="header"
+        class="header_wrap w-full h-20 fixed top-0 bg-white z-50"
+>
+    <div
+            class="header_con max-w-7xl m-auto h-20 flex justify-between items-center"
+    >
+        <div>
+            <h2 class="flex justify-center items-center">
+                <a th:href="@{/}">
+                    <img
+                            class="header_logo w-28 mt-2 -ml-2"
+                            src="https://i.postimg.cc/DZ9cZsT1/mily-logo.png"
+                            alt="mily로고"
+                    />
+                </a>
+            </h2>
+        </div>
+
+        <div class="flex justify-center items-center text-sm">
+            <div th:if="${@rq.logout}" class="mr-6 hover:text-blue-400 mt-2">
+                <a href="/user/login">로그인</a>
+            </div>
+            <div th:if="${@rq.logout}" class="hover:text-blue-400 mt-2">
+                <a href="/user/signup">회원가입</a>
+            </div>
+            <div th:if="${@rq.login}" class="mr-6 hover:text-blue-400 mt-2">
+                <a href="/user/logout">로그아웃</a>
+            </div>
+            <div th:if="${@rq.login}" class="hover:text-blue-400 mt-2">
+                <a href="/user/mypage/info">내정보</a>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        :root {
+            --m_width: 310px;
+        }
+        #header.active {
+          box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        }
+
+        @media (max-width: 360px) {
+          .header_wrap {
+            height: 50px;
+          }
+          .header_con {
+            max-width: var(--m_width);
+            height: 60px;
+          }
+
+          .header_con .header_logo {
+            width: 70px;
+            margin-top: -8px;
+            margin-left: -2px;
+          }
+        }
+    </style>
+
+    <script>
+        $(window).on("scroll", function () {
+          if ($(window).scrollTop()) {
+            $("#header").addClass("active");
+          } else {
+            $("#header").removeClass("active");
+          }
+        });
+    </script>
+</header>
+
+</body>
+</html>

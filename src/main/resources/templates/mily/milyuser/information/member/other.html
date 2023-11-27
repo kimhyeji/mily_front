@@ -1,0 +1,111 @@
+<html layout:decorate="@{mily/common/layout}" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>마이 페이지 > 회원 정보 수정</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function checkPassword() {
+            $.ajax({
+                url: '/user/checkpassword',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify ({
+                    password: $('#password').val()
+                }),
+                success: function(response) {
+                    if (response === true) {
+                        window.location.href = '/user/mypage/edit/password';
+                    } else {
+                        // 비밀번호가 일치하지 않으면 경고 메시지 표시
+                        alert('비밀번호가 일치하지 않습니다.');
+                    }
+                }
+            });
+        }
+
+        $('#edit-form').submit(function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: '/user/mypage/edit/password',
+                type: 'POST',
+                data: ({
+                    passwordConfirm: $('#passwordConfirm').val(),
+                    passwordConfirm2: $('#passwordConfirm2').val(),
+                }),
+                success: function(response) {
+                    if (response === 'valid') {
+                        window.location.href = '/user/mypage/edit/password';
+                    } else {
+                        alert('패스워드 확인에 실패했습니다.');
+                    }
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:include="mily/milyuser/information/layout/mypage_navbar :: navbar"
+         style="display: block; align-items: center; margin-bottom: 30px;"></div>
+
+    <span style="margin: 0 20%; font-size: 20px; font-weight: bold;" th:text="'회원 정보 수정'"></span>
+    <div style="display: flex; flex-direction: column; border: 1px solid #c8c8c8; border-radius: 10px; margin: 5px 19.5% 15px 19.5%; padding: 15px; font-size: 16px;">
+        <span>프로모션 정보 수신 동의</span>
+        <div style="display: flex; justify-content: space-between; margin: 1px 0;">
+            <i class="fa-solid fa-mobile-button" style="width: 88px; text-align: center;">
+                <span th:text="' 휴대전화'"></span>
+            </i>
+            <input type="checkbox" class="toggle toggle-info" checked>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin: 1px 0;">
+            <i class="fa-solid fa-envelope" style="width: 72px; text-align: center;">
+                <span th:text="'이메일'"></span>
+            </i>
+            <input type="checkbox" class="toggle toggle-info">
+        </div>
+        <br>
+
+        <span>마케팅 정보 수신 동의</span>
+        <div style="display: flex; justify-content: space-between; margin: 1px 0;">
+            <i class="fa-solid fa-mobile-button" style="width: 88px; text-align: center;">
+                <span th:text="' 휴대전화'"></span>
+            </i>
+            <input type="checkbox" class="toggle toggle-info">
+        </div>
+        <div style="display: flex; justify-content: space-between; margin: 1px 0;">
+            <i class="fa-solid fa-envelope" style="width: 72px; text-align: center;">
+                <span th:text="'이메일'"></span>
+            </i>
+            <input type="checkbox" class="toggle toggle-info">
+        </div>
+    </div>
+
+    <span style="margin: 0 20%; font-size: 20px; font-weight: bold;" th:text="'비밀번호 변경'"></span>
+    <div style="display: flex; border: 1px solid #c8c8c8; border-radius: 10px; margin: 5px 19.5% 15px 19.5%; padding: 15px; font-size: 16px;"
+         class="flex flex-col gap-6">
+        <form id="password-check-form" onsubmit="event.preventDefault(); checkPassword();">
+            <div style="margin: 20px 0; font-size: 16px;">
+                <span style="color: blue;" th:text="'안전한 비밀번호로 내 정보를 보호'"></span>
+                <span style="color: black;" th:text="'하세요.'"></span><br>
+                <span style="color: green;" th:text="'다른 아이디/사이트에서 사용한 적 없는 비밀번호'"></span><br>
+                <span style="color: green;" th:text="'이전에 사용한 적 없는 비밀번호'"></span>
+                <span style="color: black;" th:text="'가 안전합니다.'"></span><br>
+            </div>
+
+            <input type="password" id="password" name="password" placeholder="현재 비밀번호" class="input input-bordered"
+                   maxlength="30"
+                   style="width: 125px; height: 30px; margin-bottom: 20px; border: 1px solid #c8c8c8; border-radius: 10px 0 0 10px; margin-right: -4.4px;">
+            <input type="submit" value="확인"
+                   style="height: 30px; border: 1px solid #000000; border-radius: 0 10px 10px 0; padding: 0 10px; background-color: #93C5FD;">
+        </form>
+    </div>
+
+    <a target="_blank" th:href="@{/user/mypage/member/withdraw}" style="margin: 0 20%;">
+        <i class="fa-solid fa-delete-left" style="width: 18px; text-align: center;"></i>
+        회원 탈퇴</a>
+    <section th:replace="mily/common/footer :: footer"></section>
+</section>
+</body>
+</html>

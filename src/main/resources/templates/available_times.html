@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>예약 가능한 시간</title>
+</head>
+<body>
+<h1>예약 가능한 시간</h1>
+<form action="/reservation" method="post">
+    <input type="hidden" id="milyUser" name="milyUser" th:value="${milyUserId}"> <!-- 임시 사용자 ID -->
+    <input type="hidden" id="lawyerUserId" name="lawyerUserId" th:value="${lawyerUserId}">
+    <input type="hidden" id="date" name="date" th:value="${date}">
+    <ul>
+        <th:block th:each="time : ${availableTimes}">
+            <li>
+                <input type="radio" id="reservationTime" name="reservationTime" th:value="${time}">
+                <label th:for="${time}" th:text="${time}"></label>
+            </li>
+        </th:block>
+    </ul>
+    <input type="submit" value="예약하기">
+</form>
+</body>
+</html>

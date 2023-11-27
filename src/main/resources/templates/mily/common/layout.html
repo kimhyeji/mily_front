@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="winter">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+
+    <!-- 제이쿼리 불러오기 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>-->
+
+    <!-- toastr 불러오기 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+    <link rel="stylesheet" href="https://jhs512.github.io/toastr/toastr.css">
+
+    <!-- 폰트어썸 아이콘 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- 아이콘 목록 : https://fontawesome.com/search?o=r&m=free -->
+
+    <!-- 데이지 UI 불러오기 -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.4/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!--    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.7.7/dist/full.css" rel="stylesheet" type="text/css"/>-->
+    <link rel="stylesheet" href="/resource/common/common.css">
+    <script src="/resource/common/common.js"></script>
+</head>
+<body>
+<div class="flex flex-col m-auto relative min-h-screen">
+    <div th:replace="~{mily/common/header :: headerFragment}"></div>
+
+    <th:block layout:fragment="content" class="mt-20 max-w-7xl m-auto"></th:block>
+
+    <div th:replace="~{mily/common/footer :: footerFragment}"></div>
+</div>
+</body>
+</html>

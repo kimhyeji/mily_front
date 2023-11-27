@@ -1,0 +1,257 @@
+<html layout:decorate="@{mily/common/layout}" lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <title>결제 : MILY</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div
+            class="top_txt"
+            style="
+          margin: 80px auto;
+          width: 1280px;
+          text-align: center;
+          color: #1c1b1f;
+          font-size: 24px;
+          font-weight: 700;
+          word-wrap: break-word;
+          margin-bottom: 150px;
+        "
+    >
+        사이버 머니
+    </div>
+
+    <div
+            class="sc_txt"
+            style="
+          margin: 0 10%;
+          width: 80%;
+          color: black;
+          font-size: 16px;
+          font-weight: 600;
+          word-wrap: break-word;
+          margin-bottom: 20px;
+        "
+    >
+        상품 선택
+    </div>
+
+    <div class="point_wrap" style="width: 1280px">
+        <div
+                class="point_content"
+                style="
+            display: flex;
+            margin: 0 10%;
+            width: 80%;
+            justify-content: space-between;
+            font-size: 16px;
+          "
+        >
+            <button
+                    id="payment-button-50"
+                    style="
+              background: linear-gradient(
+                to left bottom,
+                #75bdff,
+                rgba(117, 189, 255, 0.3)
+              );
+              border-radius: 15px;
+              padding: 18px 25px;
+              color: #fff;
+              box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.15);
+            "
+            >
+                50 밀리 포인트<br/>₩ 900
+            </button>
+
+            <button
+                    id="payment-button-100"
+                    style="
+              background: linear-gradient(
+                to left bottom,
+                #75bdff,
+                rgba(117, 189, 255, 0.3)
+              );
+              border-radius: 15px;
+              padding: 18px 25px;
+              color: #fff;
+              box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.15);
+            "
+            >
+                100 밀리 포인트<br/>₩ 1,700
+            </button>
+
+            <button
+                    id="payment-button-300"
+                    style="
+              background: linear-gradient(
+                to left bottom,
+                #75bdff,
+                rgba(117, 189, 255, 0.3)
+              );
+              border-radius: 15px;
+              padding: 18px 25px;
+              color: #fff;
+              box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.15);
+            "
+            >
+                300 밀리 포인트<br/>₩ 4,800
+            </button>
+
+            <button
+                    id="payment-button-500"
+                    style="
+              background: linear-gradient(
+                to left bottom,
+                #75bdff,
+                rgba(117, 189, 255, 0.3)
+              );
+              border-radius: 15px;
+              padding: 18px 25px;
+              color: #fff;
+              box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.15);
+            "
+            >
+                500 밀리 포인트<br/>₩ 7,500
+            </button>
+        </div>
+    </div>
+
+    <style>
+        @media (max-width: 360px) {
+          .top_txt {
+            max-width: var(--m_width);
+            font-size: 20px !important;
+            margin: 20px auto 30px auto !important;
+          }
+
+          .top_txt::after {
+            content: " 상품 선택";
+          }
+
+          .sc_txt {
+            display: none;
+          }
+
+          .point_wrap {
+            max-width: var(--m_width);
+          }
+
+          .point_content {
+            display: flex;
+            row-gap: 20px;
+            flex-direction: column !important;
+          }
+        }
+    </style>
+
+    <script src="https://js.tosspayments.com/v1"></script>
+    <script>
+        var tossPayments = TossPayments("test_ck_Poxy1XQL8RbmjxaeJzXK87nO5Wml");
+        var orderId = new Date().getTime();
+
+        var button50 = document.getElementById("payment-button-50");
+
+        button50.addEventListener("click", function () {
+          var orderName = "밀리 포인트 50";
+          tossPayments.requestPayment("카드", {
+            amount: 900,
+            orderId: orderId,
+            orderName: orderName,
+            customerName: "박토스",
+            successUrl: window.location.origin + "/payment/success",
+            failUrl: window.location.origin + "/payment/fail",
+          });
+          $.ajax({
+            url: "/payment/getordername",
+            type: "POST",
+            data: { orderName: orderName },
+            success: function (response) {
+              console.log(response);
+            },
+            error: function (error) {
+              console.log(error);
+            },
+          });
+        });
+
+        var button100 = document.getElementById("payment-button-100");
+
+        button100.addEventListener("click", function () {
+          var orderName = "밀리 포인트 100";
+          tossPayments.requestPayment("카드", {
+            amount: 1700,
+            orderId: orderId,
+            orderName: orderName,
+            customerName: "박토스",
+            successUrl: window.location.origin + "/payment/success",
+            failUrl: window.location.origin + "/payment/fail",
+          });
+          $.ajax({
+            url: "/payment/getordername",
+            type: "POST",
+            data: { orderName: orderName },
+            success: function (response) {
+              console.log(response);
+            },
+            error: function (error) {
+              console.log(error);
+            },
+          });
+        });
+
+        var button300 = document.getElementById("payment-button-300");
+
+        button300.addEventListener("click", function () {
+          var orderName = "밀리 포인트 300";
+          tossPayments.requestPayment("카드", {
+            amount: 4800,
+            orderId: orderId,
+            orderName: orderName,
+            customerName: "박토스",
+            successUrl: window.location.origin + "/payment/success",
+            failUrl: window.location.origin + "/payment/fail",
+          });
+          $.ajax({
+            url: "/payment/getordername",
+            type: "POST",
+            data: { orderName: orderName },
+            success: function (response) {
+              console.log(response);
+            },
+            error: function (error) {
+              console.log(error);
+            },
+          });
+        });
+
+        var button500 = document.getElementById("payment-button-500");
+
+        button500.addEventListener("click", function () {
+          var orderName = "밀리 포인트 500";
+          tossPayments.requestPayment("카드", {
+            amount: 7500,
+            orderId: orderId,
+            orderName: orderName,
+            customerName: "박토스",
+            successUrl: window.location.origin + "/payment/success",
+            failUrl: window.location.origin + "/payment/fail",
+          });
+          $.ajax({
+            url: "/payment/getordername",
+            type: "POST",
+            data: { orderName: orderName },
+            success: function (response) {
+              console.log(response);
+            },
+            error: function (error) {
+              console.log(error);
+            },
+          });
+        });
+    </script>
+</div>
+</body>
+</html>

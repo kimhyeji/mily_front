@@ -1,0 +1,232 @@
+<html layout:decorate="@{mily/common/layout}" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="|${milyx.subject}|"></title>
+    <script th:inline="javascript">
+        const elapsedTime = (date) => {
+            const start = new Date(date);
+            const end = new Date();
+
+            const seconds = Math.floor((end.getTime() - start.getTime()) / 1000);
+            if (seconds < 60) return '방금 전 작성 됨';
+
+            const minutes = seconds / 60;
+            if (minutes < 60) return `${Math.floor(minutes)}분 전 작성 됨`;
+
+            const hours = minutes / 60;
+            if (hours < 24) return `${Math.floor(hours)}시간 전 작성 됨`;
+
+            const days = hours / 24;
+            if (days < 7) return `${Math.floor(days)}일 전 작성 됨`;
+
+            return `${start.toLocaleDateString()}`;
+        };
+
+        window.onload = function() {
+            document.querySelectorAll("[id^='createDate_']").forEach(function(element) {
+                const createDateInMillis = Date.parse(element.textContent);
+                element.textContent = elapsedTime(createDateInMillis);
+            });
+        };
+    </script>
+</head>
+<body>
+<div layout:fragment="content" class="items-center justify-center" style="display: flex;">
+    <div class="container w-full px-4 mt-20">
+
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <div class="detail grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-9">
+                    <div class="form-control col-span-full">
+                        <div class="form-control"
+                             th:text="${milyx.firstCategory.title} + ' ・ ' + ${milyx.secondCategory.title}"></div>
+                    </div>
+
+                    <!--게시글의 제목을 표시-->
+                    <div class="form-control col-span-full">
+                        <div th:text="${milyx.subject}" style="font-weight: bold; font-size: 30px;"></div>
+                    </div>
+
+                    <!--게시글의 본문을 표시 / whitespace-pre-line 스타일은 공백과 줄바꿈 유지함-->
+                    <div class="form-control col-span-full">
+                        <div class="whitespace-pre-line" th:text="${milyx.body}" style="font-size: 16px;"></div>
+                    </div>
+
+<!--조회수와 생성날짜 표시함 / flex를 사용하여 수평 정렬하고, space=between을 사용하여 두 요소 사이에 공간을 만듬-->
+                    <!--조회수와 생성날짜를 나란히 왼쪽 정렬합니다-->
+                    <div style="display: flex; justify-content: flex-start; align-items: center; flex-direction: row;" class="form-control col-span-full">
+
+                    <!--생성 날짜를 표시-->
+                        <div class="blue-background" th:id="'createDate__' + ${milyx.id}" th:text="${milyx.createDate}" style="font-size: 13px; margin-right: 10px;">게시물 날짜</div>
+
+                        <!--조회수 아이콘과 조회수를 표시합니다-->
+                        <div style="display: flex; align-items: center; font-size: 13px;">
+                            <!--아이콘 대신하여 텍스트를 사용하기-->
+                           <!-- <i class="fa-regular fa-eye" style="font-size: 16px;"></i> -->
+                            <div class="blue-background" th:text="'조회수 ' + ${milyx.view}" style="font-size: 13px;">조회수 160</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 해시태그 섹션 -->
+                <div class="hashtags" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px;">
+                    <!-- 각 해시태그 -->
+                    <span class="hashtag">#대학생</span>
+                    <span class="hashtag">#성관계</span>
+                    <span class="hashtag">#고소</span>
+                    <!-- 추가 해시태그 -->
+            </div>
+
+                <div style="display: flex !important;" class="justify-end">
+                    <a th:if="${isAuthor}" th:href="@{|/milyx/modify/${milyx.id}|}" class="ml-4 mr-4" th:text="수정"></a>
+                    <form th:if="${isAuthor}" th:action="@{|/milyx/delete/${milyx.id}|}" method="post"
+                          style="display: inline;">
+                        <button type="submit" class="delete ml-4 mr-4" th:data-url="@{|/milyx/delete/${milyx.id}|}">삭제
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="form-control" style="display: -webkit-box">
+                <div>ㅤㅤ</div>
+                <i class="fa-regular fa-comment" style="font-size: 16px;"></i>
+                <div>ㅤ</div>
+                <div th:text="${#lists.size(milyx.comments)}|"></div>
+            </div>
+            <form th:if="${@rq.login and role == 'approve' and !milyx.hasAdoptedAnswer}" method="POST"
+                  onsubmit="submitCommentForm(this); return false;"
+                  th:action="@{|/milyxcomment/create/${milyx.id}|}">
+                <div class="mt-6 form-control">
+                <textarea class="textarea textarea-bordered h-[calc(100vh-850px)] min-h-[100px]" maxlength="20000"
+                          name="body" placeholder="한 번 등록한 답변은 수정이 불가능합니다. 답변 등록 전 확인 부탁드립니다.">
+                </textarea>
+                </div>
+
+                <div>
+                    <button class="btn btn-block btn-primary gap-1">
+                        <i class="fa-solid fa-pen"></i>
+                        <span>답변 등록</span>
+                    </button>
+                </div>
+            </form>
+
+
+            <div class="form-control">
+                <ul th:each="milyxcomment : ${milyx.comments.?[isAdopt == true]}"
+                    style="border: 1px solid #93c5fd; border-radius: 15px;">
+                    <li>
+                        <span>작성자 체택 답변</span>
+                    </li>
+                    <li>
+                        <span th:text="${milyxcomment.author.userName} + ' 변호사'"></span>
+                    </li>
+                    <li>
+                        <span th:text="${milyxcomment.body}"></span>
+                    </li>
+                </ul>
+                <ul th:each="milyxcomment : ${milyx.comments.?[isAdopt == false]}">
+                    <li>
+                        <span th:text="${milyxcomment.author.userName} + ' 변호사'"></span>
+                    </li>
+                    <li>
+                        <span th:text="${milyxcomment.body}"></span>
+                        <div th:if="${user != null and user.userName == milyxcomment.author.userName and !milyx.hasAdoptedAnswer}">
+                            <form th:action="@{|/milyxcomment/delete/${milyxcomment.id}|}" method="post"
+                                  style="display: inline;">
+                                <button type="submit" class="delete ml-4 mr-4"
+                                        th:data-url="@{|/milyxcomment/delete/${milyxcomment.id}|}">삭제
+                                </button>
+                            </form>
+                        </div>
+                        <div th:if="${user != null and user.userName == milyx.author.userName and !milyx.hasAdoptedAnswer}">
+                            <form th:action="@{|/milyxcomment/adopt/${milyxcomment.id}|}" method="post"
+                                  style="display: inline;">
+                                <button type="submit" class="adopt btn btn-primary"
+                                        th:data-url="@{|/milyxcomment/adopt/${milyxcomment.id}|}">채택
+                                </button>
+                            </form>
+                        </div>
+
+                    </li>
+                </ul>
+            </div>
+
+            <div class="mt-6">
+                <div class="text-center">
+                    <a class="btn btn-link" href="/milyx">목록</a>
+                </div>
+
+<body>
+<div>
+    <h2 th:text="'변호사 답변 총 ' + ${#lists.size(milyx.comments)} + '건'">변호사 답변 총 0건</h2>
+    <!-- 답변 리스트 -->
+</div>
+<!-- 답글 양식 -->
+<div class="reply-form" style="margin-top: 50px;">
+    <form method="POST" action="/submit-reply-url">
+        <!-- 답글 입력 필드 -->
+        <textarea name="replyContent" placeholder="여기에 답글을 입력하세요"></textarea>
+
+        <!-- 답글 제출 버튼 -->
+        <button type="submit">답글 제출</button>
+    </form>
+</div>
+</body>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script>
+    let submitCommentFormDone = false;
+
+    function submitCommentForm(form) {
+        if (submitCommentFormDone) return;
+
+        form.body.value = form.body.value.trim();
+
+        if (form.body.value.length == 0) {
+            form.body.focus();
+            toastWarning('내용을 입력해주세요.');
+            return;
+        }
+        if (form.body.value.length < 30) {
+            form.body.focus();
+            toastWarning('내용을 30 글자 이상 입력해주세요.');
+            return;
+        }
+
+        form.submit();
+        submitCommentFormDone = true;
+    }
+
+    const delete_elements = document.getElementsByClassName("delete");
+    Array.from(delete_elements).forEach(function (element) {
+        element.addEventListener('click', function () {
+            event.preventDefault();
+            if (confirm("정말로 삭제하시겠습니까?")) {
+                var form = document.createElement('form');
+                form.setAttribute('method', 'post');
+                form.setAttribute('action', this.dataset.url);
+
+                document.body.appendChild(form);
+                form.submit();
+            };
+        });
+    });
+
+    const adopt_elements = document.getElementsByClassName("adopt");
+    Array.from(adopt_elements).forEach(function (element) {
+        element.addEventListener('click', function (event) {
+            event.preventDefault();
+            if (confirm("정말로 이 답변을 채택하시겠습니까?")) {
+                var form = document.createElement('form');
+                form.setAttribute('method', 'post');
+                form.setAttribute('action', this.dataset.url);
+
+                document.body.appendChild(form);
+                form.submit();
+            };
+        });
+    });
+</script>

@@ -1,0 +1,139 @@
+<html layout:decorate="@{mily/common/layout}" lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <title>아이디 찾기 : MILY</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <div class="find_wrap">
+        <div class="max-w-2xl mx-auto px-28 py-20 mt-32 mb-20 border">
+            <div class="mb-10 text-2xl font-bold text-center">
+                아이디 찾기
+            </div>
+
+            <form
+                    th:action="@{/user/retrieveId}"
+                    method="POST"
+                    onsubmit="submitFindIdForm(this); return false;"
+                    class="flex flex-col gap-6"
+            >
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text text-xs">이메일</span>
+                    </label>
+                    <input
+                            type="email"
+                            name="userEmail"
+                            placeholder="이메일"
+                            class="input input-bordered"
+                            autofocus
+                            maxlength="100"
+                    />
+                </div>
+
+                <!-- 추가적으로 다른 정보(예: 전화번호)가 필요하면 여기에 추가하세요 -->
+
+                <div class="find_btn_wrap mt-28">
+                    <button class="btn btn-block btn-primary mb-5">
+                        <span>아이디 찾기</span>
+                    </button>
+
+                    <div class="text-center">
+                        <a href="/user/login" class="text-gray-300 text-xs underline hover:text-blue-400">로그인</a>
+                        <a href="/user/signup" class="text-gray-300 text-xs mx-3 underline hover:text-blue-400">회원가입</a>
+                        <a href="/user/findPassword" class="text-gray-300 text-xs underline hover:text-blue-400">비밀번호
+                            찾기</a>
+                    </div>
+                </div>
+            </form>
+
+            <div class="h_bottom"></div>
+        </div>
+    </div>
+    <style>
+        .input:focus, .input:focus-within {
+          outline: none;
+        }
+
+        .find_wrap {
+          width: 1280px;
+        }
+
+        .find_btn_wrap .btn {
+          background-color: #fff;
+          border: 2px solid #309cff;
+          border-radius: 10px;
+          color: #309cff;
+          padding: 10px 80px;
+        }
+
+        .find_btn_wrap .btn:hover {
+          border: 2px solid #87bbfa;
+          color: #87bbfa;
+        }
+
+        @media (max-width: 360px) {
+          .find_wrap {
+            max-width: var(--m_width);
+          }
+
+          .find_wrap > div {
+            border: none;
+            padding: 0;
+            margin-top: 70px;
+          }
+
+          .find_btn_wrap {
+            margin-top: 30px;
+          }
+
+          .h_bottom {
+            height: 126px;
+          }
+
+        }
+    </style>
+
+    <script>
+        let submitFindIdFormDone = false;
+        function submitFindIdForm(form) {
+          form.userEmail.value = form.userEmail.value.trim();
+
+          if (form.userEmail.value.length == 0) {
+            form.userEmail.focus();
+            toastWarning("이메일 입력 란을 확인해주세요.");
+            return;
+          }
+
+          /* 추가적인 유효성 검사는 여기에 작성하세요 */
+          $.ajax({
+            url: "/user/findLoginIdPage",
+            type: "POST",
+            data: "userEmail=" + form.userEmail.value,
+            success: function (response) {
+              form.submit();
+              submitFindIdFormDone = true;
+            },
+            error: function (error) {
+              toastWarning("아이디를 찾을 수 없습니다.");
+              return;
+            },
+          });
+        }
+    </script>
+
+    <!-- 페이지 상단에 스크립트 추가 -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var errorMessage = /*[[${errorMessage}]]*/ null;
+        if (errorMessage) {
+          alert(errorMessage);
+        }
+        /*]]>*/
+    </script>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+<html layout:decorate="@{mily/common/layout}" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>마이 페이지 : MILY</title>
+</head>
+<body>
+<section layout:fragment="content" style="width: 1280px;">
+    <!--  메뉴바  -->
+    <div id="header_menu" class="text-lg w-full fixed top-20 left-0 bg-white z-50 h-12 border-b pt-4">
+        <div class="flex max-w-7xl m-auto justify-evenly">
+            <a th:href="@{/user/mypage/info}"
+               style="color: rgb(43, 45, 47); border-bottom: 2px solid black; padding-bottom: 3px;">내 정보</a>
+            <a th:href="@{/user/mypage/edit}" class="ml-5 hover:text-blue-400 text-gray-300">계정 설정</a>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="sub-text">
+            <span class="large-text">마이페이지</span>
+        </div>
+        <div class="flex justify-evenly">
+            <div class="flex justify-center" style="width: 120px;">내 관심글</div>
+            <div class="flex justify-center" style="width: 120px;">변호사 즐겨찾기</div>
+        </div>
+        <div class="flex justify-evenly mb-12">
+            <div class="flex justify-center" style="width: 120px;">0</div>
+            <div class="flex justify-center" style="width: 120px;">0</div>
+        </div>
+
+        <div class="my-info flex mt-4">
+            <span class="regular-text ml-4 my-4">내 정보</span>
+            <div class="info-first flex">
+                <div class="ml-4 my-4">아이디</div>
+                <div class="mr-4 my-4" th:text="${user.userLoginId}"></div>
+            </div>
+            <div class="info-middle flex">
+                <div class="ml-4 my-4">이메일</div>
+                <div class="mr-4 my-4" th:text="${userEmail}"></div>
+            </div>
+            <div class="info-last flex">
+                <div class="ml-4 my-4">전화번호</div>
+                <div class="mr-4 my-4" th:text="${userPhone}"></div>
+            </div>
+        </div>
+
+        <div class="my-res flex mt-8">
+            <span class="regular-text ml-4 my-4">내 상담내역</span>
+            <div class="info-first flex">
+                <div class="ml-4 my-4">작성한 상담글</div>
+                <div class="mr-4 my-4" th:text="${posts}"></div>
+            </div>
+            <div class="info-middle flex">
+                <div class="ml-4 my-4">상담 예약</div>
+                <div class="mr-4 my-4" th:text="${reservations}"></div>
+            </div>
+        </div>
+
+        <div class="my-res flex mt-8">
+            <span class="regular-text ml-4 my-4">내 포인트</span>
+            <div class="info-first flex">
+                <div class="ml-4 my-4">포인트</div>
+                <div class="mr-4 my-4" th:text="${user.milyPoint}"></div>
+            </div>
+            <div class="info-middle flex">
+                <div class="ml-4 my-4">충전 내역</div>
+                <div class="mr-4 my-4" th:if="${payments > 0}" th:text="${payments}"></div>
+            </div>
+        </div>
+    </div>
+    <!--    <span style="margin: 0 20%; font-size: 20px; font-weight: bold;" th:text="'기본 정보'"></span>-->
+    <!--    <div style="display: block; border: 1px solid #93E6FB; border-radius: 10px; margin: 5px 19.5% 15px 19.5%; padding: 15px; align-items: center; font-size: 16px;">-->
+    <!--        <ul>-->
+    <!--            <li style="margin-bottom: 5px;"><span th:text="${user.userName}"></span></li>-->
+    <!--            <li style="margin: 5px 0;"><i class="fa-solid fa-mobile-button"-->
+    <!--                                          style="width: 18px; text-align: center;"></i><span-->
+    <!--                    th:text="' ' + ${userPhone}"></span></li>-->
+    <!--            <li style="margin: 5px 0;"><i class="fa-solid fa-envelope"-->
+    <!--                                          style="width: 18px; text-align: center;"></i><span-->
+    <!--                    th:text="' ' + ${userEmail}"></span></li>-->
+    <!--            <li style="margin-top: 5px;"><i class="fa-solid fa-check" style="width: 18px; text-align: center;"></i><span-->
+    <!--                    th:text="' ' + ${#temporals.format(user.userCreateDate, 'yyyy년 MM월 dd일')} + ' 가입'"></span></li>-->
+    <!--        </ul>-->
+    <!--        <div style="margin: 15px 0 0 0;">-->
+    <!--            <a th:href="@{/user/mypage/edit}" style="color: #000; font-weight: bold;">회원정보 수정 바로가기</a>-->
+    <!--        </div>-->
+    <!--    </div>-->
+
+    <!--    <span style="margin: 0 20%; font-size: 20px; font-weight: bold; display: block;"-->
+    <!--          th:text="'나의 질문 ' + ${posts} + '개'"></span>-->
+    <!--    <div style="display: block; border: 1px solid #93E6FB; border-radius: 10px; margin: 5px 19.5% 15px 19.5%; padding: 15px; align-items: center; font-size: 16px;">-->
+    <!--        <ul>-->
+    <!--            <a th:if="${userPosts.isEmpty()}" th:href="@{/milyx}" target="_blank"-->
+    <!--               style="color: #000; font-weight: bold;">질문 바로가기</a>-->
+    <!--            <li th:each="userPosts: ${userPosts}" style="display: flex;">-->
+    <!--                <a target="_blank" th:href="@{/milyx/detail/{id}(id=${userPosts.id})}"-->
+    <!--                   th:text="${#strings.abbreviate(userPosts.subject, 14)}"></a>-->
+    <!--            </li>-->
+    <!--        </ul>-->
+    <!--    </div>-->
+
+    <!--    <span style="margin: 0 20%; font-size: 20px; font-weight: bold; display: block;" th:if="${payments}"-->
+    <!--          th:text="'포인트 충전 내역'"></span>-->
+    <!--    <div style="display: block; border: 1px solid #93E6FB; border-radius: 10px; margin: 5px 19.5% 15px 19.5%; padding: 15px; align-items: center; font-size: 16px;">-->
+    <!--        <div th:each="payments: ${payments}">-->
+    <!--            <div th:if="${#temporals.format(payments.orderDate, 'MM월 dd일')}">-->
+    <!--                <p th:text="${#temporals.format(payments.orderDate, 'MM월 dd일')} + ', ' + ${payments.orderName}"></p>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
+
+    <!--    <a target="_blank" th:href="@{/user/mypage/withdraw}" style="margin: 0 20%;">-->
+    <!--        <i class="fa-solid fa-delete-left" style="width: 18px; text-align: center;"></i>-->
+    <!--        회원 탈퇴</a>-->
+    <style>
+        .main {
+            display: flex;
+            width: 640px;
+            justify-content: center;
+            flex-direction: column;
+            margin: 128px 320px 96px;
+        }
+        .main > .sub-text {
+            display: flex;
+            justify-content: center;
+            margin: 48px 0;
+        }
+        .large-text {
+            font-size: 32px;
+            font-weight: 600;
+        }
+        .regular-text {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .my-info, .my-res {
+            width: 100%;
+            flex-direction: column;
+        }
+        .my-info .info-first, .my-res .info-first {
+            width: 100%;
+            justify-content: space-between;
+            border-top: 2px solid black;
+        }
+        .my-info .info-middle, .my-res .info-middle {
+            width: 100%;
+            justify-content: space-between;
+        }
+        .my-info .info-last, .my-res .info-last {
+            width: 100%;
+            justify-content: space-between;
+        }
+    </style>
+</section>
+</body>
+</html>

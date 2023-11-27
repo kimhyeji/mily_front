@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Estimate List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+<h2>Estimate List</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Category</th>
+        <th>CategoryItem</th>
+        <th>Area</th>
+        <th>Name</th>
+        <th>PhoneNumber</th>
+        <th>Birth</th>
+    </tr>
+    </thead>
+
+    <tbody th:each="estimate : ${estimates}">
+
+    <tr>
+        <td th:text="${estimate.id}"></td>
+        <td th:text="${estimate.category}"></td>
+        <td th:text="${estimate.categoryItem}"></td>
+        <td th:text="${estimate.area}"></td>
+        <td th:text="${estimate.name}"></td>
+        <td th:text="${estimate.phoneNumber}"></td>
+        <td th:text="${estimate.birth}"></td>
+
+        <!-- 추가적인 컬럼이 있다면 이곳에 작성 -->
+
+    </tr>
+
+    </tbody>
+
+</table>
+
+<a href="/">Back to Home</a>
+
+</body>
+</html>
+
+

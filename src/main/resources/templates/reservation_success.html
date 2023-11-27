@@ -1,0 +1,100 @@
+<html layout:decorate="@{mily/common/layout}" lang="ko" data-theme="winter">
+<head>
+    <title>예약 완료 : MILY</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="success-message">
+        <span class="message-title">예약 완료</span>
+    </div>
+
+    <div class="reservation-info">
+        <div class="reservation-info-section">
+            <div>
+                <span th:text="${lawyer.userName} + ' 변호사와의 상담 예약이 완료되었습니다.'"></span>
+            </div>
+            <div>
+                <span th:text="${#temporals.format(selectedTime, 'yyyy년 MM월 dd일')} + ' (' + ${day} + ') ' + ${time}"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="user-info">
+        <div class="user-info-section">
+            <div>
+                <span th:text="'예약자 정보'" style="font-size: 22px;"></span><br>
+            </div>
+            <div class="info">
+                <br><span th:text="'성함'"></span><br>
+                <input type="text" th:placeholder="${user.userName}" readonly/>
+            </div>
+            <div class="info">
+                <span th:text="'연락처'"></span><br>
+                <input type="text" th:placeholder="${user.userPhoneNumber}" readonly/>
+            </div>
+        </div>
+    </div>
+
+    <div class="find_btn_wrap mt-16">
+        <a th:href="@{/user/lawyers}">
+            <button class="btn btn-block btn-primary mb-5">
+                <span th:text="'< 돌아가기'"></span>
+            </button>
+        </a>
+    </div>
+
+    <style>
+        .success-message {
+            display: flex;
+            justify-content: center;
+            margin: 80px 0 40px 0;
+        }
+        .success-message > .message-title {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .reservation-info {
+            background-color: #35373A;
+            color: #fff;
+        }
+        .reservation-info, .user-info {
+            display: flex;
+            width: 768px;
+            border: 1px solid #35373A;
+            border-radius: 10px;
+            font-size: 20px;
+            padding: 10px;
+            margin: 50px 0;
+        }
+        .reservation-info > .reservation-info-section {
+            flex-direction: column;
+        }
+        .user-info > .user-info-section {
+            flex-direction: column;
+        }
+        .user-info-section > .info > input {
+            width: 728px;
+            border: 1px solid #c8c8c8;
+            border-radius: 15px;
+            font-size: 16px;
+            margin: 10px 20px 10px 10px;
+            padding: 10px;
+        }
+
+        .find_btn_wrap .btn {
+            background-color: #fff;
+            border: 2px solid #309cff;
+            border-radius: 10px;
+            color: #309cff;
+            padding: 10px 80px;
+        }
+
+        .find_btn_wrap .btn:hover {
+            border: 2px solid #87bbfa;
+            color: #87bbfa;
+        }
+    </style>
+</div>
+</body>
+</html>

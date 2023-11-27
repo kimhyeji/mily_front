@@ -1,0 +1,181 @@
+<html layout:decorate="@{mily/common/layout}" lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <title>결제 실패 : MILY</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div
+            class="f_wrap"
+            style="
+          width: 1280px;
+          margin: 80px 0;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          display: inline-flex;
+        "
+    >
+        <div
+                class="f_circle"
+                style="
+            width: 250px;
+            height: 250px;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+          "
+        >
+            <div
+                    style="
+              width: 100px;
+              height: 100px;
+              position: absolute;
+              border-radius: 50%;
+              background: rgba(255, 255, 255, 0.5);
+            "
+            ></div>
+            <div
+                    style="
+              width: 85px;
+              height: 85px;
+              position: absolute;
+              border-radius: 50%;
+              background: #309cff;
+            "
+            ></div>
+        </div>
+        <div
+                class="f_top_txt"
+                style="
+            text-align: center;
+            color: #302f34;
+            font-size: 20px;
+            font-weight: 600;
+            word-wrap: break-word;
+          "
+        >
+            결제에 실패했습니다.
+        </div>
+        <div
+                style="
+            text-align: center;
+            color: #302f34;
+            font-size: 20px;
+            font-weight: 600;
+            word-wrap: break-word;
+          "
+        >
+            다시 시도해주세요.
+        </div>
+        <div
+                class="f_md_txt"
+                style="
+            width: 40%;
+            margin-top: 30px;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 174px;
+            display: inline-flex;
+          "
+        >
+            <div
+                    style="
+              flex-direction: column;
+              justify-content: center;
+              align-items: flex-start;
+              display: inline-flex;
+            "
+            >
+                <div
+                        style="
+                height: 50px;
+                color: #848484;
+                font-size: 16px;
+                font-weight: 400;
+                word-wrap: break-word;
+              "
+                >
+                    에러 코드
+                </div>
+            </div>
+            <div
+                    style="
+              flex-direction: column;
+              justify-content: center;
+              align-items: flex-end;
+              display: inline-flex;
+            "
+            >
+                <div
+                        style="
+                text-align: right;
+                height: 50px;
+                color: #4a4a4c;
+                font-size: 16px;
+                font-weight: 400;
+                word-wrap: break-word;
+              "
+                        th:text="${code}"
+                ></div>
+            </div>
+        </div>
+
+        <a
+                href="/payment"
+                style="text-decoration: none; margin: 40px 0 -80px 0"
+        >
+            <button
+                    style="
+              background-color: #fff;
+              border: 2px solid #309cff;
+              border-radius: 10px;
+              color: #309cff;
+              padding: 10px 80px;
+            "
+            >
+            <span
+                    style="font-size: 14px; font-weight: 800"
+                    th:text="'<'"
+            ></span>
+                <span style="font-size: 14px">돌아가기</span>
+            </button>
+        </a>
+    </div>
+
+    <style>
+        @media (max-width: 360px) {
+          .f_wrap {
+            max-width: var(--m_width);
+            margin: 0 auto 30px auto !important;
+            white-space: nowrap;
+          }
+
+          .f_circle {
+            width: 100px !important;
+            height: 100px !important;
+          }
+
+          .f_circle div {
+            width: 50px !important;
+            height: 50px !important;
+          }
+
+          .f_top_txt {
+            margin-top: 50px;
+            letter-spacing: -1px;
+          }
+
+          .f_md_txt {
+            height: 270px;
+            width: 100% !important;
+            align-items: center !important;
+            font-size: 14px !important;
+            gap: 0 !important;
+          }
+        }
+    </style>
+</div>
+</body>
+</html>

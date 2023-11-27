@@ -1,0 +1,133 @@
+<html layout:decorate="@{mily/common/layout}" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="|${feed.subject}|"></title>
+    <script th:inline="javascript">
+        const elapsedTime = (date) => {
+            const start = new Date(date);
+            const end = new Date();
+
+            const seconds = Math.floor((end.getTime() - start.getTime()) / 1000);
+            if (seconds < 60) return '방금 전 작성 됨';
+
+            const minutes = seconds / 60;
+            if (minutes < 60) return `${Math.floor(minutes)}분 전 작성 됨`;
+
+            const hours = minutes / 60;
+            if (hours < 24) return `${Math.floor(hours)}시간 전 작성 됨`;
+
+            const days = hours / 24;
+            if (days < 7) return `${Math.floor(days)}일 전 작성 됨`;
+
+            return `${start.toLocaleDateString()}`;
+        };
+
+        window.onload = function() {
+            document.querySelectorAll("[id^='createDate_']").forEach(function(element) {
+                const createDateInMillis = Date.parse(element.textContent);
+                element.textContent = elapsedTime(createDateInMillis);
+            });
+        };
+    </script>
+</head>
+<body>
+<div layout:fragment="content" class="items-center justify-center" style="display: flex;">
+    <div class="container w-full px-4">
+
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <div class="detail grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-9">
+
+                    <div class="form-control col-span-full">
+                        <div th:text="${feed.subject}" style="font-weight: bold;"></div>
+                    </div>
+
+                    <div class="form-control col-span-full">
+                        <div class="whitespace-pre-line" th:text="${feed.body}"></div>
+                    </div>
+
+                    <div style="display: contents !important; justify-contents: space-between;"
+                         class="form-control col-span-full">
+                        <div class="form-control">
+                            <div th:id="'createDate_' + ${feed.id}" th:text="${feed.createDate}"></div>
+                        </div>
+                        <div class="form-control" style="display: -webkit-box">
+                            <i class="fa-regular fa-eye" style="font-size: 16px;"></i>
+                            <div>ㅤ</div>
+                            <div th:text="${feed.view}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex !important;" class="justify-end">
+                    <a th:if="${isAuthor}" th:href="@{|/feed/modify/${feed.id}|}" class="ml-4 mr-4" th:text="수정"></a>
+                    <form th:if="${isAuthor}" th:action="@{|/feed/delete/${feed.id}|}" method="post"
+                          style="display: inline;">
+                        <button type="submit" class="delete ml-4 mr-4" th:data-url="@{|/feed/delete/${feed.id}|}">삭제
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <div class="text-center">
+                    <a class="btn btn-link" href="/feed">목록</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script>
+    let submitCommentFormDone = false;
+
+    function submitCommentForm(form) {
+        if (submitCommentFormDone) return;
+
+        form.body.value = form.body.value.trim();
+
+        if (form.body.value.length == 0) {
+            form.body.focus();
+            toastWarning('내용을 입력해주세요.');
+            return;
+        }
+        if (form.body.value.length < 30) {
+            form.body.focus();
+            toastWarning('내용을 30 글자 이상 입력해주세요.');
+            return;
+        }
+
+        form.submit();
+        submitCommentFormDone = true;
+    }
+
+    const delete_elements = document.getElementsByClassName("delete");
+    Array.from(delete_elements).forEach(function (element) {
+        element.addEventListener('click', function () {
+            event.preventDefault();
+            if (confirm("정말로 삭제하시겠습니까?")) {
+                var form = document.createElement('form');
+                form.setAttribute('method', 'post');
+                form.setAttribute('action', this.dataset.url);
+
+                document.body.appendChild(form);
+                form.submit();
+            };
+        });
+    });
+
+    const adopt_elements = document.getElementsByClassName("adopt");
+    Array.from(adopt_elements).forEach(function (element) {
+        element.addEventListener('click', function (event) {
+            event.preventDefault();
+            if (confirm("정말로 이 답변을 채택하시겠습니까?")) {
+                var form = document.createElement('form');
+                form.setAttribute('method', 'post');
+                form.setAttribute('action', this.dataset.url);
+
+                document.body.appendChild(form);
+                form.submit();
+            };
+        });
+    });
+</script>

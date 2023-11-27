@@ -1,0 +1,83 @@
+/* CSS 기본 설정 */
+body {
+  font-family: 'Pretendard-Regular', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f8f9fa;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.detail {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 20px;
+}
+
+.form-control {
+  margin-bottom: 10px;
+}
+
+/* 폰트 크기, 두께, 색상 설정 */
+.form-control > div {
+  font-size: 1rem;
+  color: #333;
+}
+
+/* 볼드 스타일 */
+.form-control > div[style="font-weight: bold;"] {
+  font-weight: bold;
+}
+
+/* 글씨체 스타일 */
+.whitespace-pre-line {
+  white-space: pre-line;
+}
+
+/* 버튼 및 링크 스타일 */
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.btn-primary {
+  background: #007bff;
+}
+
+.btn-link {
+  background: none;
+  color: #007bff;
+}
+
+/* 아이콘 스타일 */
+.fa-regular, .fa-solid {
+  font-size: 16px;
+  margin-right: 5px;
+}
+
+/* 입력 필드 스타일 */

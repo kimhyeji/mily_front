@@ -1,0 +1,173 @@
+<html layout:decorate="@{mily/common/layout}" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 페이지 : MILY</title>
+</head>
+
+<body>
+<section layout:fragment="content">
+
+    <div class="flex" style="border: 1px solid #c8c8c8; margin: 10px 20%; font-size: 20px;">
+        <div class="flex" style="flex-direction: column">
+            <span style="font-weight: bold; color: red;">관리자 전용 페이지입니다.</span>
+            <span style="font-weight: bold; color: blue">이 곳에서 일반 회원 및 변호사 회원 관리와 결제 내역 등을 확인할 수 있습니다.</span>
+        </div>
+    </div>
+
+    <div class="flex" style="flex-direction: column;">
+        <div style="margin: 20px 0 10px 0;">
+        <span th:if="${users > 0}" th:text="'전체 회원 ' + ${users} + '명'" style="font-size: 18px; font-weight: bold;"></span>
+        </div>
+        <table>
+            <thead style="border: 1px solid #c8c8c8;">
+            <tr>
+                <th style="border-right: 1px solid #c8c8c8;">번호</th>
+                <th style="border-right: 1px solid #c8c8c8;">아이디</th>
+                <th style="border-right: 1px solid #c8c8c8;">이름</th>
+                <th style="border-right: 1px solid #c8c8c8;">이메일</th>
+                <th style="border-right: 1px solid #c8c8c8;">전화번호</th>
+                <th style="border-right: 1px solid #c8c8c8;">생년월일</th>
+                <th style="border-right: 1px solid #c8c8c8;">권한</th>
+                <th>가입일</th>
+            </tr>
+            </thead>
+
+            <tbody style="border: 1px solid #c8c8c8; text-align: center;">
+            <tr th:each="userList: ${userList}">
+                <td th:text="${userList.id}" style="border-right: 1px solid #c8c8c8;"></td>
+                <td th:text="${userList.userLoginId}" style="border-right: 1px solid #c8c8c8;"></td>
+                <td th:text="${userList.userName}" style="border-right: 1px solid #c8c8c8;"></td>
+                <td th:text="${userList.userEmail}" style="border-right: 1px solid #c8c8c8;"></td>
+                <td th:text="${userList.userPhoneNumber}" style="border-right: 1px solid #c8c8c8;"></td>
+                <td th:text="${userList.userDateOfBirth}" style="border-right: 1px solid #c8c8c8;"></td>
+                <td th:switch="${userList.Role}" style="border-right: 1px solid #c8c8c8;">
+                    <span th:case="'admin'">관리자</span>
+                    <span th:case="'member'">일반 회원</span>
+                    <span th:case="'waiting'">승인 대기</span>
+                    <span th:case="'approve'">변호사</span>
+                </td>
+                <td th:text="${#temporals.format(userList.userCreateDate, 'yyyy-MM-dd')}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div style="margin: 20px 0 10px 0;">
+            <span th:if="${waiting > 0}" th:text="'승인 대기 중인 변호사가 ' + ${waiting} + '명 있습니다.'" style="font-size: 18px; font-weight: bold;"></span>
+        </div>
+        <table>
+            <thead style="border: 1px solid #c8c8c8;">
+                <tr>
+                    <th style="border-right: 1px solid #c8c8c8;">번호</th>
+                    <th style="border-right: 1px solid #c8c8c8;">아이디</th>
+                    <th style="border-right: 1px solid #c8c8c8;">이름</th>
+                    <th style="border-right: 1px solid #c8c8c8;">분야</th>
+                    <th style="border-right: 1px solid #c8c8c8;">지역</th>
+                    <th style="border-right: 1px solid #c8c8c8;">사무실 주소</th>
+                    <th style="border-right: 1px solid #c8c8c8;">라이센스 번호</th>
+                    <th style="border-right: 1px solid #c8c8c8;">자기소개</th>
+                    <th style="border-right: 1px solid #c8c8c8;">상태</th>
+                    <th>승인</th>
+                </tr>
+            </thead>
+
+            <tbody style="border: 1px solid #c8c8c8; text-align: center;">
+                <tr th:each="lawyer: ${waitingLawyers}">
+                    <td th:text="${lawyer.id}" style="border-right: 1px solid #c8c8c8;"></td>
+                    <td th:text="${lawyer.userLoginId}" style="border-right: 1px solid #c8c8c8;"></td>
+                    <td th:text="${lawyer.userName}" style="border-right: 1px solid #c8c8c8;"></td>
+                    <td th:text="${lawyer.lawyerUser.major}" style="border-right: 1px solid #c8c8c8;"></td>
+                    <td th:text="${lawyer.lawyerUser.area}" style="border-right: 1px solid #c8c8c8;"></td>
+                    <td th:text="${lawyer.lawyerUser.officeAddress}" style="border-right: 1px solid #c8c8c8;"></td>
+                    <td th:text="${lawyer.lawyerUser.licenseNumber}" style="border-right: 1px solid #c8c8c8;"></td>
+                    <td th:text="${lawyer.lawyerUser.introduce}" style="border-right: 1px solid #c8c8c8;"></td>
+                    <td th:switch="${lawyer.Role}" style="border-right: 1px solid #c8c8c8;">
+                        <span th:case="'waiting'">승인 대기</span>
+                        <span th:case="'approve'">변호사</span>
+                    </td>
+                    <td style="border-right: 1px solid #c8c8c8;">
+                    <div class="button">
+                        <form th:action="@{/user/approveLawyer/{id}(id=${lawyer.id})}" method="post">
+                            <input type="submit" value="승인하기" style="font-size: 17px; color: blue;">
+                        </form>
+                    </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="margin: 20px 0 10px 0;">
+            <span th:if="${payments < 0}" th:text="'결제 내역이 없습니다.'" style="font-size: 18px; font-weight: bold;"></span>
+            <span th:if="${payments > 0}" th:text="'총 결제 내역 ' + ${payments} + '건'" style="font-size: 18px; font-weight: bold;"></span>
+        </div>
+        <table>
+            <thead style="border: 1px solid #c8c8c8;">
+                <tr>
+                    <th style="border-right: 1px solid #c8c8c8;">번호</th>
+                    <th style="border-right: 1px solid #c8c8c8;">결제일시</th>
+                    <th style="border-right: 1px solid #c8c8c8;">주문 번호</th>
+                    <th style="border-right: 1px solid #c8c8c8;">주문자 아이디</th>
+                    <th style="border-right: 1px solid #c8c8c8;">결제 항목</th>
+                    <th>가격 (단위: 원)</th>
+                </tr>
+            </thead>
+
+            <tbody style="border: 1px solid #c8c8c8; text-align: center;">
+                <tr th:each="paymentsList: ${paymentsList}">
+                    <td style="border-right: 1px solid #c8c8c8;" th:text="${paymentsList.id}"></td>
+                    <td style="border-right: 1px solid #c8c8c8;" th:text="${#temporals.format(paymentsList.orderDate, 'yyyy-MM-dd, HH시 mm분 ss초')}"></td>
+                    <td style="border-right: 1px solid #c8c8c8;" th:text="${paymentsList.orderId}"></td>
+                    <td style="border-right: 1px solid #c8c8c8;" th:text="${paymentsList.customerName.userLoginId}"></td>
+                    <td style="border-right: 1px solid #c8c8c8;" th:text="${paymentsList.orderName}"></td>
+                    <td th:text="${paymentsList.amount}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="display:flex; margin: 20px 0 10px 0;">
+            <span th:if="${milyXs < 0}" th:text="'질문이 없습니다.'" style="font-size: 18px; font-weight: bold;"></span>
+            <span th:if="${milyXs > 0}" th:text="'MilyX 에 ' + ${milyXs} + '개의 게시글이 있습니다.'" style="font-size: 18px; font-weight: bold;"></span>
+            <a th:href="@{/milyx}" target="_blank" style="text-decoration: underline;">(목록)</a>
+        </div>
+        <table style="border: 1px solid #c8c8c8;">
+            <thead style="border: 1px solid #c8c8c8;">
+                <tr>
+                    <th style="border-right: 1px solid #c8c8c8;">번호</th>
+                    <th style="border-right: 1px solid #c8c8c8;">작성자 ID</th>
+                    <th style="border-right: 1px solid #c8c8c8;">작성일시</th>
+                    <th style="border-right: 1px solid #c8c8c8;">제목</th>
+                    <th style="border-right: 1px solid #c8c8c8;">내용</th>
+                    <th style="border-right: 1px solid #c8c8c8;">답변 수</th>
+                    <th style="border-right: 1px solid #c8c8c8;">채택 여부</th>
+                    <th>관리</th>
+                </tr>
+            </thead>
+
+            <tbody style="border: 1px solid #c8c8c8; text-align: center;">
+                <tr th:each="milyXList: ${milyXList}">
+                    <td style="border-right: 1px solid #c8c8c8;" th:text="${milyXList.id}"></td>
+                    <td style="border-right: 1px solid #c8c8c8;" th:text="${milyXList.author.userLoginId}"></td>
+                    <td style="border-right: 1px solid #c8c8c8;" th:text="${#temporals.format(milyXList.createDate, 'yyyy-MM-dd, HH시 mm분 ss초')}"></td>
+                    <td style="border-right: 1px solid #c8c8c8;">
+                        <a th:href="@{/milyx/detail/{id}(id=${milyXList.id})}" target="_blank" th:text="${#strings.abbreviate(milyXList.subject, 14)}" style="text-decoration: underline;">
+                        </a>
+                    </td>
+                    <td style="border-right: 1px solid #c8c8c8;" th:text="${#strings.abbreviate(milyXList.body, 24)}"></td>
+                    <td style="border-right: 1px solid #c8c8c8;" th:text="${milyXList.commentsCount}"></td>
+                    <td style="border-right: 1px solid #c8c8c8;">
+                        <span th:unless="${milyXList.hasAdoptedAnswer}">X</span>
+                        <span th:if="${milyXList.hasAdoptedAnswer}">O</span>
+                    </td>
+                    <td th:unless="${milyXList.hasAdoptedAnswer}">
+                        <div class="button">
+                            <form th:action="@{/milyx/delete/{id}(id=${milyXList.id})}" method="post">
+                                <input type="submit" value="삭제" style="font-size: 17px; color: red;">
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</body>
+</html>

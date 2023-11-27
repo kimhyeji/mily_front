@@ -1,0 +1,82 @@
+<html layout:decorate="@{mily/common/layout}" lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <title>아이디 찾기 결과 : MILY</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <div class="find_wrap">
+        <div class="max-w-2xl mx-auto px-28 py-20 mt-28 mb-20 border">
+            <div class="mb-10 text-2xl font-bold text-center">
+                아이디 찾기 결과
+            </div>
+
+            <div class="flex flex-col gap-6">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text text-xs">찾은 아이디</span>
+                    </label>
+                    <input type="text" class="input input-bordered" th:value="${foundId}" readonly>
+                </div>
+
+                <div class="find_btn_wrap mt-12">
+                    <div class="text-center">
+                        <a href="/user/login" class="text-gray-300 text-xs underline hover:text-blue-400">로그인</a>
+                        <a href="/user/signup" class="text-gray-300 text-xs mx-3 underline hover:text-blue-400">회원가입</a>
+                        <a href="/user/findPassword" class="text-gray-300 text-xs underline hover:text-blue-400">비밀번호 찾기</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="h_bottom"></div>
+        </div>
+    </div>
+
+    <style>
+        .input:focus, .input:focus-within {
+          outline: none;
+        }
+
+        .find_wrap {
+          width: 1280px;
+        }
+
+        .find_btn_wrap .btn {
+          background-color: #fff;
+          border: 2px solid #309cff;
+          border-radius: 10px;
+          color: #309cff;
+          padding: 10px 80px;
+        }
+
+        .find_btn_wrap .btn:hover {
+          border: 2px solid #87bbfa;
+          color: #87bbfa;
+        }
+
+        @media (max-width: 360px) {
+          .find_wrap {
+            max-width: var(--m_width);
+          }
+
+          .find_wrap > div {
+            border: none;
+            padding: 0;
+            margin-top: 70px;
+          }
+
+          .find_btn_wrap {
+            margin-top: 30px;
+          }
+
+          .h_bottom {
+            height: 194px;
+          }
+        }
+    </style>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+<html layout:decorate="@{mily/common/layout}" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 탈퇴 안내 : MILY</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div th:include="mily/milyuser/information/layout/mypage_navbar :: navbar"
+         style="display: block; align-items: center; margin-bottom: 30px;"></div>
+
+    <span style="margin: 0 20%; font-size: 20px; font-weight: bold;" th:text="'회원 탈퇴'"></span>
+    <div style="display: flex; border: 1px solid #93E6FB; border-radius: 10px; margin: 5px 19.5% 15px 19.5%; padding: 15px; font-size: 16px;"
+         class="flex flex-col gap-6">
+        <form id="password-check-form" onsubmit="event.preventDefault(); checkPassword();">
+            <div style="margin: 20px 0; font-size: 16px;">
+
+                <i class="fa-solid fa-check"></i>
+                <span style="color: #000;" th:text="'사용 중인 아이디 ('"></span>
+                <span style="color: #00B869;" th:text="${user.userLoginId}"></span>
+                <span style="color: #000;" th:text="')는 탈퇴 시 복구가 불가능합니다.'"></span><br>
+                <span style="color: red; font-size: 14px;" th:text="'탈퇴한 아이디는 이후 재사용 및 복구가 불가능'" class="ml-4"></span>
+                <span style="font-size: 14px;" th:text="'하니 신중하게 선택하시기 바랍니다.'"></span><br>
+
+                <br><br><i class="fa-solid fa-check"></i>
+                <span style="color: #000;" th:text="'탈퇴 시 회원 정보는 모두 삭제됩니다.'"></span><br>
+                <span style="font-size: 14px;" th:text="'회원 정보는 모두 삭제되며, 삭제된 데이터는 복구되지 않습니다.'" class="ml-4"></span><br>
+
+                <br><br><i class="fa-solid fa-check"></i>
+                <span style="color: #000;" th:text="'탈퇴 후에도 MilyX 서비스에 등록된 게시물은 유지됩니다.'"></span><br>
+                <span style="color: #93E6FB; font-size: 14px;" th:text="'MilyX'" class="ml-4"></span>
+                <span style="font-size: 14px;" th:text="'서비스에 올린 질문은 탈퇴 시 자동 삭제되지 않고 유지됩니다.'"></span><br>
+
+                <br><br><i class="fa-solid fa-check"></i>
+                <span style="color: #000;" th:text="'탈퇴 후에는 MILY에서 제공하는 모든 서비스 이용이 불가능합니다.'"></span><br>
+                <span style="font-size: 14px;" th:text="'MilyX에 남아있는 질문은 탈퇴 후 삭제할 수 없습니다.'" class="ml-4"></span><br>
+            </div>
+
+            <div style="border-top: 1px solid #c8c8c8; margin: 80px 20px;"></div>
+            <div style="margin: 20px 0; font-size: 16px;">
+                <div style="display: flex; height: 50px; align-items: center; justify-content: center;">
+                    <input type="checkbox" class="checkbox checkbox-info" style="width: 19px; height: 19px;">
+                    <span th:text="' 안내 사항을 모두 확인하였으며, 이에 동의합니다.'" class="ml-2"></span><br>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: center;">
+                    <a th:href="@{/user/mypage/withdraw/ok}">확인
+<!--                        <button style="height: 30px; border: 1px solid #93E6FB; border-radius: 10px; padding: 0 10px; background-color: #93E6FB;">확인</button>-->
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <section th:replace="mily/common/footer :: footer"></section>
+</section>
+</body>
+</html>

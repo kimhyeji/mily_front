@@ -1,0 +1,108 @@
+<html layout:decorate="@{mily/common/layout}" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>견적 : MILY</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <form class="mt-20" th:action="@{/user/estimate}" method="post" style="border: 1px solid #75bdff;">
+        <span>1차 카테고리</span>
+        <div>
+            <select name="firstCategory" id="firstCategory" class="my-2" style="border: 1px solid #c8c8c8;">
+                <option value="0" disabled selected>전체</option>
+                <option th:each="firstCategory : ${firstCategories}" th:text="${firstCategory.title}"
+                        th:value="${firstCategory.id}"></option>
+            </select>
+        </div>
+        <span>2차 카테고리</span>
+        <div>
+            <select name="secondCategory" id="secondCategory" class="my-2" style="border: 1px solid #c8c8c8;">
+                <option value="0" disabled selected>대분류를 선택해주세요.</option>
+            </select>
+        </div>
+        <div>
+            <select name="area" id="area" class="my-2" style="border: 1px solid #c8c8c8;">
+                <option value="0" disabled selected>지역은 선택해주세요.</option>
+                <option value="서울">서울</option>
+                <option value="경기">경기</option>
+                <option value="인천">인천</option>
+                <option value="세종">세종</option>
+                <option value="대전">대전</option>
+                <option value="대구">대구</option>
+                <option value="울산">울산</option>
+                <option value="광주">광주</option>
+                <option value="부산">부산</option>
+                <option value="제주">제주</option>
+                <option value="강원">강원</option>
+                <option value="경북">경북</option>
+                <option value="경남">경남</option>
+                <option value="충북">충북</option>
+                <option value="충남">충남</option>
+                <option value="전북">전북</option>
+                <option value="전남">전남</option>
+            </select>
+        </div>
+        <span>하고싶은 말</span>
+        <div>
+            <textarea name="body" id="body" cols="30" rows="10"
+                      style="border: 1px solid #c8c8c8; width: 100%;"></textarea>
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <input type="submit" value="보내기">
+        </div>
+    </form>
+
+    <!-- MilyUserController Line 186, @GetMapping("/estimate") -->
+    <!-- http://localhost:8090/user/estimate -->
+
+    <!-- 1차, 2차 카테고리 선택 후 작성하는 게 저장되는 것까지 -->
+    <div>
+        <div th:text="'데이터 뿌리기 : 1차,2차 카테고리 데이터 전부'" style="font-size: 32px; margin: 20px 0;"></div>
+        <!-- 1차, 2차 카테고리 전부 있는 테이블 -->
+        <table style="border: 1px solid green;">
+            <thead>
+            <tr>
+                <th>1차 ID</th>
+                <th>1차 카테고리</th>
+                <th>2차 ID</th>
+                <th>2차 카테고리</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="secondCategory: ${secondCategories}">
+                <td th:text="${secondCategory.firstCategory.id}"></td>
+                <td th:text="${secondCategory.firstCategory.title}"></td>
+                <td th:text="${secondCategory.id}"></td>
+                <td th:text="${secondCategory.title}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script th:inline="javascript">
+        $('#firstCategory').change(function() {
+            var firstCategoryId = $(this).val();
+
+            $.ajax({
+                url: "/milyx/secondCategories",
+                method: 'GET',
+                data: { firstCategoryId: firstCategoryId },
+                success: function(data) {
+                    $("#secondCategory").empty();
+                    $.each(data, function (index, category) {
+                        const option = $("<option>", { value: category.id, text: category.title });
+                        $("#secondCategory").append(option);
+                    });
+                },
+                error: function(request,status,error){
+                    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                }
+            });
+        });
+    </script>
+</div>
+
+</body>
+</html>

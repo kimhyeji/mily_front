@@ -23,7 +23,7 @@
     </div>
 
     <!-- =====첫번째==== -->
-    <main class="m_first flex flex-col mx-auto mt-10 ">
+    <main class="m_first flex flex-col mx-auto mt-10">
         <!--  메인banner  -->
         <div class="banner_wrap flex justify-between mt-8" style="transform: translateX(0%);">
             <div class="swiper">
@@ -751,10 +751,10 @@
                             <p class="title mt-2" style="color: rgb(117, 189, 255); font-size: 16px;"
                                th:text="${milyx.subject}"></p>
                         </div>
-                        <p class="list mt-2" style="color: rgb(122, 130, 135); font-size: 16px; word-wrap: break-word;"
+                        <p class="list_txt mt-2" style="color: rgb(122, 130, 135); font-size: 16px; word-wrap: break-word;"
                            th:text="${milyx.body}"></p>
                         <div class="question-img-box gap-1 flex items-center mt-2 mb-5">
-                            <div class="question-img flex items-center" th:if="${#lists.size(milyx.comments) > 0}">
+                            <div class="question-img flex items-center mr-3" th:if="${#lists.size(milyx.comments) > 0}">
                                 <img src="https://d2ai3ajp99ywjy.cloudfront.net/uploads/thumb/6073cd9daf42110031758d22-thumb.jpg"
                                      class="question-img-1" alt="변호사 썸네일">
                                 <img src="https://d2ai3ajp99ywjy.cloudfront.net/uploads/thumb/646af0c335bda68e03637c66-thumb-1686298679633.jpg"
@@ -944,10 +944,6 @@
 
     <style>
         /* 커스텀 */
-        #header_menu.active {
-            box-shadow: rgba(99, 99, 99, 0.2) 0 7px 7px -4px;
-        }
-
         .search-box {
             font-size: 1.5rem;
             font-weight: 700;
@@ -1090,10 +1086,7 @@
         }
 
         @media (max-width: 360px) {
-            #header_menu {
-                top: 48px;
-                padding: 1rem 25px 0 25px;
-            }
+            
 
             .m_first {
                 margin-top: 10px;
@@ -1255,17 +1248,32 @@
                 margin: 0;
             }
 
+            .question-box .question-titleLine .title,
+            .question-box .question-titleLine .list {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+
             .question-box  .question-titleLine > .title {
                 font-size: 13px !important;
-                white-space: nowrap;
-                margin-right: 10px;
+                margin-left: 10px;   
             }
 
             .question-box .question-titleLine .list {
                 font-size: 16px !important;
+            }
+
+            .question-box .list_txt {
+                font-size: 14px !important;
+                max-width: var(--m_width);
+                margin-bottom: 10px;
                 overflow: hidden;
-                white-space: nowrap;
                 text-overflow: ellipsis;
+                word-break: break-word;
+                display: -webkit-box;
+                -webkit-line-clamp: 5;
+                -webkit-box-orient: vertical
             }
 
             .question-box .question-list > p {
@@ -1308,14 +1316,6 @@
     </style>
 
     <script>
-        $(window).on("scroll", function () {
-          if ($(window).scrollTop()) {
-            $("#header_menu").addClass("active");
-          } else {
-            $("#header_menu").removeClass("active");
-          }
-        });
-
         var swiper = new Swiper('.swiper', {
           loop: true,
           autoplay: {

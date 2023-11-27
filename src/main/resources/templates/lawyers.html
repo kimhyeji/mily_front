@@ -1,9 +1,6 @@
 <html layout:decorate="@{mily/common/layout}" lang="ko" data-theme="winter">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>변호사 : MILY</title>
 </head>
 <body>
@@ -12,36 +9,37 @@
     <div id="header_menu" class="text-lg w-full fixed top-20 left-0 bg-white z-50 h-12 border-b pt-4">
         <div class="max-w-7xl m-auto">
             <a href="/" class="hover:text-blue-400 text-gray-300">홈</a>
-            <a href="/user/lawyers" class="ml-5 hover:text-blue-400 text-gray-300" style="color: rgb(43, 45, 47); border-bottom: 2px solid black; padding-bottom: 5px;">변호사</a>
+            <a href="/user/lawyers" class="ml-5 hover:text-blue-400 text-gray-300" style="color: rgb(43, 45, 47); border-bottom: 2px solid black; padding-bottom: 7px;">변호사</a>
             <a href="/milyx" class="ml-5 hover:text-blue-400 text-gray-300">상담사례</a>
         </div>
     </div>
 
     <!--  배너  -->
-    <div class="main-banner-gird" style="transform: translateX(0%);">
-        <div class="max-w-full mx-auto flex justify-end items-end">
-            <div class="main-banner mx-auto">
+    <div class="relative mt-10">
+        <div class="mx-auto flex justify-end items-end">
+            <div class="mx-auto">
                 <!-- 이미지 -->
-                <div class="banner-img-box max-w-screen-lg">
+                <div class="banner-img-box">
                     <img src="https://i.postimg.cc/bNmfwYCM/hunters-race-MYbh-N8-Kaa-Ec-unsplas.jpg"
                          class="object-cover; vertical-align: bottom;" alt="main-img-1">
                     <div class="text-grid">
-                        <p class="text">MILY 최고의 변호사들을 만나보세요!</p>
+                        <p class="m-24 text-3xl">MILY 최고의 변호사들을 만나보세요!</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
     <!-- tab-wrapper -->
     <form action="">
-        <div class="lawyers-tab-wrapper mt-20">
-            <div class="lawyers-tab-advices mx-28">
+        <div class="lawyers-tab-wrapper mt-5 mb-7 pt-5 pb-2 border-b-2 border-gray-300">
+            <div class="lawyers-tab-advices">
                 <!-- 전체 -->
                 <button ng-class="{'active': activeTab === 'all'}"
                         ng-click="activeTab !== 'all' &amp;&amp; changeTab('all')" analytics-on="click"
                         analytics-category="lawyer-tab" analytics-event="click_all-lawyer" analytics-label="ALL"
                         class="lawyers-tab all-lawyers active">
-                    <div class="advice-title text-gray-800 pb-10 mx-5">전체</div>
+                    <div class="advice-title text-gray-800">전체</div>
                 </button>
 
                 <!-- 전화상담 -->
@@ -49,7 +47,7 @@
                         ng-click="activeTab !== 'all' &amp;&amp; changeTab('all')" analytics-on="click"
                         analytics-category="lawyer-tab" analytics-event="click_all-lawyer" analytics-label="ALL"
                         class="lawyers-tab all-lawyers active">
-                    <div class="advice-title text-gray-400 pb-4 mx-5">전화상담</div>
+                    <div class="advice-title text-gray-400 mx-5">전화상담</div>
                 </button>
 
                 <!-- 방문상담 -->
@@ -57,171 +55,97 @@
                         ng-click="activeTab !== 'all' &amp;&amp; changeTab('all')" analytics-on="click"
                         analytics-category="lawyer-tab" analytics-event="click_all-lawyer" analytics-label="ALL"
                         class="lawyers-tab all-lawyers active">
-                    <div class="advice-title text-gray-400 pb-4 mx-5">방문상담</div>
+                    <div class="advice-title text-gray-400">방문상담</div>
                 </button>
             </div>
         </div>
     </form>
 
-    <div class="container relative mx-auto" th:each="lawyer : ${lawyers}">
-        <div class="lawyer-left-list max-w-6xl mx-auto">
-            <table class="lawyers-list-wrapper mt-16">
-                <tbody>
-                <tr>
-                    <div class="premium-lawyer-card-list w-4/5 px-5 mx-auto">
-                        <div class="category flex">
-                            <div class="container">
-                                <div class="lawyer-tit flex">
-                                    <a th:href="@{/reservation/select_date(lawyerUserId=${lawyer.id})}"
-                                       th:text="${lawyer.userName} + ' 변호사'" class="lawyer-name text-3xl"></a>
-                                    <div class="lawyer-status ml-3 flex items-center">
-                                        <div class="watch-icon">
-                                            <a href='https://postimages.org/' target='_blank'>
-                                                <img src='https://i.postimg.cc/HVnX7N8k/free-icon-clock.png'
-                                                     border='0' alt='clock'/></a>
-                                        </div>
-                                        <i class="lc-watch text-gray-600">상담 가능</i>
-                                    </div>
-                                </div>
-
-                                <div class="lawyer-company-name text-gray-500 text-sm mb-4"
-                                     th:text="${lawyer.lawyerUser.officeAddress}"></div>
-                                <span class="lawyer-text text-lg" th:text="${lawyer.lawyerUser.introduce}">
-                                    </span>
-
-                                <!-- 1만원 아이콘-->
-                                <div class="lawyer-coupon-icon my-5 w-16">
-                                    <img src="" class="couponicon">
-                                </div>
-
-                                <!-- #해시태그버튼 -->
-                                <div ng-if="adCategoryHighlightKeywords.length > 0"
-                                     class="lawyer-card-keywords flex items-center">
-                                    <!---->
-                                    <div class="lawyer-card-keyword bg-gray-200 rounded-3xl h-8 p-3 flex items-center justify-center">
-                                        <span th:text="'#' + ${lawyer.lawyerUser.major}"></span>
-                                    </div>
-                                </div>
-
-                                <!-- 변호사상담예약하기버튼 -->
-                                <div class="click-button-box flex justify-start mx-2">
-                                    <a th:if="${@rq.login}"
-                                       th:href="@{/reservation/select_date(lawyerUserId=${lawyer.id})}">
-                                        <button class="click_reserve-button my-5">
-                                            예약하기
-                                        </button>
-                                    </a>
-                                    <a th:if="${@rq.login}" th:href="@{/milyx}">
-                                        <button class="click_reserve-button my-5 mx-4">
-                                            상담글 작성
-                                        </button>
-                                    </a>
-                                    <span th:if="${@rq.logout}" th:text="'로그인 하시면 상담 서비스 이용이 가능합니다.'"
-                                          class="mt-2"></span>
-                                </div>
+    <div class="relative border-b mb-5" th:each="lawyer : ${lawyers}">
+        <div class="lawyer-left-list">
+            <div class="category flex">
+                <div class="container">
+                    <div class="lawyer-tit flex">
+                        <span th:text="${lawyer.userName} + ' 변호사'" class="lawyer-name text-xl"></span>
+                        <div class="lawyer-status ml-2 mb-1 flex items-center text-sm">
+                            <div class="watch-icon">
+                                <a href='https://postimages.org/' target='_blank'>
+                                    <img src='https://i.postimg.cc/HVnX7N8k/free-icon-clock.png'
+                                            border='0' alt='clock'/></a>
                             </div>
-
-                            <!-- 변호사 이미지 -->
-                            <div class="lawyerimg-box flex items-center">
-                                <div class="lawyer-gride-box">
-                                    <div ng-class="{'has-comment': managerCommentView &amp;&amp; hasManagerComment}"
-                                         class="lawyer-profile-right">
-                                        <div ng-click="clickProfileLink({lawyerSlug: lawyer.slug, clickElement: 'lawyer_thumbnail'})"
-                                             ad-if="gaCategory" ad-category="premium_search_ads_lawyer-list"
-                                             ad-event="click_lawyer-thumbnail" ad-label="9403-이재준" ad-delay="1000"
-                                             class="picture">
-                                            <img class="lawyer-profile"
-                                                 th:src="${lawyer.lawyerUser.profileImgFilePath}">
-<!--                                                 src="https://d2ai3ajp99ywjy.cloudfront.net/uploads/original/5e64b6fc9566c101e43e1b23-original.jpg?s=256x256">-->
-                                        </div>
-                                        <!---->
-                                    </div>
-
-                                    <!-- 더 알아보기 -->
-                                    <div ng-click="clickProfileLink({lawyerSlug: lawyer.slug, clickElement: 'lawyer_more_see'})"
-                                         ad-if="gaCategory" ad-category="premium_search_ads_lawyer-list"
-                                         ad-event="click_lawyer-more-see" ad-label="5308-이재준" ad-delay="1000"
-                                         class="lawyer-more-see-block mt-16">
-                                        <div class="lawyer-more-see-text text-center">더 알아보기</div>
-                                        <div class="lawyer-more-see-arrow">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
+                            <i class="lc-watch text-gray-600 ml-2 mt-1">상담 가능</i>
                         </div>
                     </div>
-                </tr>
-                </tbody>
-            </table>
+
+                    <div class="lawyer-company-name text-gray-500 text-sm"
+                            th:text="${lawyer.lawyerUser.officeAddress}"></div>
+
+                    <div class="lawyer-text text-base my-6 inline-block" th:text="${lawyer.lawyerUser.introduce}">
+                        </div>
+
+                    <!-- #해시태그버튼 -->
+                    <div ng-if="adCategoryHighlightKeywords.length > 0"
+                            class="lawyer-card-keywords flex items-center text-xs">
+                        <!---->
+                        <div class="lawyer-card-keyword bg-gray-200 rounded-3xl h-8 p-3 flex items-center justify-center mb-2">
+                            <span th:text="'#' + ${lawyer.lawyerUser.major}"></span>
+                        </div>
+                    </div>
+
+                    <!-- 변호사상담예약하기버튼 -->
+                    <div class="click-button-box flex justify-start mt-2">
+                        <a th:if="${@rq.login}" th:href="@{/reservation/select_date(lawyerUserId=${lawyer.id})}"class="btn btn-primary">예약하기</a>
+                        <a th:if="${@rq.login}" th:href="@{/milyx}"class="btn btn-primary ml-2">상담글 작성</a>
+                        <sapn th:if="${@rq.logout}" th:text="'로그인 하시면 상담 서비스 이용이 가능합니다.'" class="text-xs"></sapn>
+                    </div>
+                </div>
+
+                <!-- 변호사 이미지 -->
+                <div class="lawyerimg-box flex items-center">
+                    <div class="lawyer-gride-box">
+                        <a th:href="@{/reservation/select_date(lawyerUserId=${lawyer.id})}">
+                            <div ng-class="{'has-comment': managerCommentView &amp;&amp; hasManagerComment}"
+                                class="lawyer-profile-right">
+                            <div ng-click="clickProfileLink({lawyerSlug: lawyer.slug, clickElement: 'lawyer_thumbnail'})"
+                                    ad-if="gaCategory" ad-category="premium_search_ads_lawyer-list"
+                                    ad-event="click_lawyer-thumbnail" ad-label="9403-이재준" ad-delay="1000"
+                                    class="picture">
+                                <img class="lawyer-profile"
+                                        th:src="${lawyer.lawyerUser.profileImgFilePath}">
+<!--                                                 src="https://d2ai3ajp99ywjy.cloudfront.net/uploads/original/5e64b6fc9566c101e43e1b23-original.jpg?s=256x256">-->
+                            </div>
+                            <!---->
+                        </div>
+                        </a>
+
+                        <!-- 더 알아보기 -->
+                        <div>
+                            <a th:href="@{/reservation/select_date(lawyerUserId=${lawyer.id})}"
+                            class="hover:text-blue-400 lawyer-name text-sm border-b-2 border-gray-300 hover:border-blue-400">더 알아보기</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
     <style>
-        /* 폰트 설정 */
-        @font-face {
-          font-family: "GmarketSansMedium";
-          src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff")
-            format("woff");
-          font-weight: normal;
-          font-style: normal;
-        }
-
-        html > body {
-          font-family: "GmarketSansMedium";
-          text-underline-position: under;
-        }
-
-        /* 노말라이즈 */
-        body, ul, li {
-            margin: 0; padding: 0;
-            list-style: none;
-        }
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-
-        /* 라이브러리 */
-
-        /* 커스텀 */
-        :root {
-          --site-width: 1280px;
-        }
-
-        .con {
-          max-width: var(--site-width);
-        }
-
         /* icon */
         .watch-icon {
-          width: 15px;
-          height: 15px;
+          width: 17px;
+          height: 17px;
         }
 
         /* 배너 텍스트 */
         .text-grid {
           position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
+          top: 0;
+          left: 0;
           width: 100%;
-          max-width: 43.75rem;
+          height: 100%;
           text-align: center;
-          padding: 0 1rem;
-          font-size:2rem;
           color: #fff;
-        }
-
-        .lawyer-text:after {
-          width: 4px;
-          height: 4px;
-          line-height: 18px;
-          margin-left: 2px;
-          background-color: rgba(147, 197, 253, var(--tw-bg-opacity));
-          border-radius: 50%;
-          content: "";
-          display: inline-block;
+          background-color: rgba(0, 0, 0, 0.2);
         }
 
         .category > .container .click-button-box .click_reserve-button {
@@ -275,21 +199,15 @@
           top: 28%;
         }
 
-        /* 오른쪽 필터 */
-        @media (min-width: 560px)
-        .filter-row-2 .filter-option {
-            float: right;
-            margin-bottom: 14px;
-            padding-right: 20px;
-        }
-        .filter-row-2 .filter-option {
-            cursor: pointer;
-            display: block;
-            height: 22px;
+        .click-button-box .btn {
+            height: calc(50% - 10px);
+            background-color: #93c5fd;
+            border: none;
+            color: #fff;
         }
 
-        .lawyer-left-list{
-          width : 1280px;
+        .click-button-box .btn:hover {
+            background-color: #65aaf7;
         }
     </style>
 </div>

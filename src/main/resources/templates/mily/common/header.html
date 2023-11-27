@@ -40,15 +40,28 @@
     <style>
         :root {
             --m_width: 310px;
+            --site-width: 1280px;
         }
+
         #header.active {
           box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
         }
 
+        /* 홈, 변호사 등 */
+        #header_menu.active {
+            box-shadow: rgba(99, 99, 99, 0.2) 0 7px 7px -4px;
+        }
+
         @media (max-width: 360px) {
+          #header_menu {
+            top: 48px;
+            padding: 1rem 25px 0 25px;
+          }
+          
           .header_wrap {
             height: 50px;
           }
+
           .header_con {
             max-width: var(--m_width);
             height: 60px;
@@ -68,6 +81,16 @@
             $("#header").addClass("active");
           } else {
             $("#header").removeClass("active");
+          }
+        });
+
+        // 홈, 변호사 등
+        $(window).on("scroll", function () {
+          if ($(window).scrollTop()) {
+            $("#header_menu").addClass("active");
+          } else {
+
+            $("#header_menu").removeClass("active");
           }
         });
     </script>

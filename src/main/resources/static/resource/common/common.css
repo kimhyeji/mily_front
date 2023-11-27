@@ -42,14 +42,6 @@ a {
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* X축 위치, Y축 위치, 퍼짐, 색상 */
 }
 
-footer {
-    margin-bottom: 50px; /* 또는 원하는 크기 */
-}
-
-body {
-    padding-bottom: 50px; /* 또는 원하는 크기 */
-}
-
 .reply-form {
     margin-top: 50px; /* 상단 공백 */
 }

@@ -9,29 +9,30 @@
     <div id="header_menu" class="text-lg w-full fixed top-20 left-0 bg-white z-50 h-12 border-b pt-4">
         <div class="max-w-7xl m-auto">
             <a href="/" class="hover:text-blue-400 text-gray-300">홈</a>
-            <a href="/user/lawyers" class="ml-5 hover:text-blue-400 text-gray-300" style="color: rgb(43, 45, 47); border-bottom: 2px solid black; padding-bottom: 7px;">변호사</a>
+            <a href="/user/lawyers" class="ml-5 hover:text-blue-400 text-gray-300"
+               style="color: rgb(43, 45, 47); border-bottom: 2px solid black; padding-bottom: 7px;">변호사</a>
             <a href="/milyx" class="ml-5 hover:text-blue-400 text-gray-300">상담사례</a>
         </div>
     </div>
 
-    <!--  배너  -->
-    <div class="relative mt-10">
-        <div class="mx-auto flex justify-end items-end">
-            <div class="mx-auto">
-                <!-- 이미지 -->
-                <div class="banner-img-box">
-                    <img src="https://i.postimg.cc/bNmfwYCM/hunters-race-MYbh-N8-Kaa-Ec-unsplas.jpg"
-                         class="object-cover; vertical-align: bottom;" alt="main-img-1">
-                    <div class="text-grid">
-                        <p class="m-24 text-3xl">MILY 최고의 변호사들을 만나보세요!</p>
+    <div class="content_item">
+        <!--  배너  -->
+        <div class="m_banner_wrap relative mt-10">
+            <div class="mx-auto flex justify-end items-end">
+                <div class="mx-auto">
+                    <!-- 이미지 -->
+                    <div class="banner-img-box">
+                        <img src="https://i.postimg.cc/bNmfwYCM/hunters-race-MYbh-N8-Kaa-Ec-unsplas.jpg"
+                             class="object-cover; vertical-align: bottom;" alt="main-img-1">
+                        <div class="text-grid">
+                            <p class="m-24 text-3xl">MILY 최고의 변호사들을 만나보세요!</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <!-- tab-wrapper -->
-    <form action="">
+
+        <!-- tab-wrapper -->
         <div class="lawyers-tab-wrapper mt-5 mb-7 pt-5 pb-2 border-b-2 border-gray-300">
             <div class="lawyers-tab-advices">
                 <!-- 전체 -->
@@ -59,73 +60,81 @@
                 </button>
             </div>
         </div>
-    </form>
 
-    <div class="relative border-b mb-5" th:each="lawyer : ${lawyers}">
-        <div class="lawyer-left-list">
-            <div class="category flex">
-                <div class="container">
-                    <div class="lawyer-tit flex">
-                        <span th:text="${lawyer.userName} + ' 변호사'" class="lawyer-name text-xl"></span>
-                        <div class="lawyer-status ml-2 mb-1 flex items-center text-sm">
-                            <div class="watch-icon">
-                                <a href='https://postimages.org/' target='_blank'>
-                                    <img src='https://i.postimg.cc/HVnX7N8k/free-icon-clock.png'
-                                            border='0' alt='clock'/></a>
-                            </div>
-                            <i class="lc-watch text-gray-600 ml-2 mt-1">상담 가능</i>
-                        </div>
-                    </div>
-
-                    <div class="lawyer-company-name text-gray-500 text-sm"
-                            th:text="${lawyer.lawyerUser.officeAddress}"></div>
-
-                    <div class="lawyer-text text-base my-6 inline-block" th:text="${lawyer.lawyerUser.introduce}">
-                        </div>
-
-                    <!-- #해시태그버튼 -->
-                    <div ng-if="adCategoryHighlightKeywords.length > 0"
-                            class="lawyer-card-keywords flex items-center text-xs">
-                        <!---->
-                        <div class="lawyer-card-keyword bg-gray-200 rounded-3xl h-8 p-3 flex items-center justify-center mb-2">
-                            <span th:text="'#' + ${lawyer.lawyerUser.major}"></span>
-                        </div>
-                    </div>
-
-                    <!-- 변호사상담예약하기버튼 -->
-                    <div class="click-button-box flex justify-start mt-2">
-                        <a th:if="${@rq.login}" th:href="@{/reservation/select_date(lawyerUserId=${lawyer.id})}"class="btn btn-primary">예약하기</a>
-                        <a th:if="${@rq.login}" th:href="@{/milyx}"class="btn btn-primary ml-2">상담글 작성</a>
-                        <sapn th:if="${@rq.logout}" th:text="'로그인 하시면 상담 서비스 이용이 가능합니다.'" class="text-xs"></sapn>
-                    </div>
-                </div>
-
-                <!-- 변호사 이미지 -->
-                <div class="lawyerimg-box flex items-center">
-                    <div class="lawyer-gride-box">
-                        <a th:href="@{/reservation/select_date(lawyerUserId=${lawyer.id})}">
-                            <div ng-class="{'has-comment': managerCommentView &amp;&amp; hasManagerComment}"
-                                class="lawyer-profile-right">
-                            <div ng-click="clickProfileLink({lawyerSlug: lawyer.slug, clickElement: 'lawyer_thumbnail'})"
-                                    ad-if="gaCategory" ad-category="premium_search_ads_lawyer-list"
-                                    ad-event="click_lawyer-thumbnail" ad-label="9403-이재준" ad-delay="1000"
-                                    class="picture">
-                                <img class="lawyer-profile"
-                                        th:src="${lawyer.lawyerUser.profileImgFilePath}">
-<!--                                                 src="https://d2ai3ajp99ywjy.cloudfront.net/uploads/original/5e64b6fc9566c101e43e1b23-original.jpg?s=256x256">-->
-                            </div>
-                            <!---->
-                        </div>
-                        </a>
-
-                        <!-- 더 알아보기 -->
-                        <div>
+        <div class="relative border-b mb-5" th:each="lawyer : ${lawyers}">
+            <div class="lawyer-left-list">
+                <div class="category flex">
+                    <div class="container">
+                        <div class="lawyer-tit flex">
                             <a th:href="@{/reservation/select_date(lawyerUserId=${lawyer.id})}"
-                            class="hover:text-blue-400 lawyer-name text-sm border-b-2 border-gray-300 hover:border-blue-400">더 알아보기</a>
+                               th:text="${lawyer.userName} + ' 변호사'"
+                               class="hover:text-blue-400 lawyer-name text-xl"></a>
+                            <div class="lawyer-status ml-2 mb-1 flex items-center text-sm">
+                                <div class="watch-icon">
+                                    <a href='https://postimages.org/' target='_blank'>
+                                        <img src='https://i.postimg.cc/HVnX7N8k/free-icon-clock.png'
+                                             border='0' alt='clock'/></a>
+                                </div>
+                                <i class="lc-watch text-gray-600 ml-2 mt-1">상담 가능</i>
+                            </div>
+                        </div>
+
+                        <div class="lawyer-company-name text-gray-500 text-sm"
+                             th:text="${lawyer.lawyerUser.officeAddress}"></div>
+
+                        <div class="lawyer-text text-base my-6 inline-block" th:text="${lawyer.lawyerUser.introduce}">
+                        </div>
+
+                        <div class="m_bt_btn">
+                            <!-- #해시태그버튼 -->
+                            <div ng-if="adCategoryHighlightKeywords.length > 0"
+                                 class="lawyer-card-keywords flex items-center text-xs">
+                                <!---->
+                                <div class="lawyer-card-keyword bg-gray-200 rounded-3xl h-8 p-3 flex items-center justify-center mb-2">
+                                    <span th:text="'#' + ${lawyer.lawyerUser.major}"></span>
+                                </div>
+                            </div>
+
+                            <!-- 변호사상담예약하기버튼 -->
+                            <div class="click-button-box flex justify-start mt-2 mb-5">
+                                <a th:if="${@rq.login}" th:href="@{/reservation/select_date(lawyerUserId=${lawyer.id})}"
+                                   class="text-xs btn btn-sm btn-primary">예약하기</a>
+                                <a th:if="${@rq.login}" th:href="@{/milyx}" class="text-xs btn btn-sm btn-primary ml-2">상담글
+                                    작성</a>
+                                <sapn th:if="${@rq.logout}" th:text="'로그인 하시면 상담 서비스 이용이 가능합니다.'"
+                                      class="text-xs block"></sapn>
+                            </div>
                         </div>
                     </div>
-                </div>
 
+                    <!-- 변호사 이미지 -->
+                    <div class="lawyerimg-box flex items-center">
+                        <div class="lawyer-gride-box">
+                            <a th:href="@{/reservation/select_date(lawyerUserId=${lawyer.id})}">
+                                <div ng-class="{'has-comment': managerCommentView &amp;&amp; hasManagerComment}"
+                                     class="lawyer-profile-right">
+                                    <div ng-click="clickProfileLink({lawyerSlug: lawyer.slug, clickElement: 'lawyer_thumbnail'})"
+                                         ad-if="gaCategory" ad-category="premium_search_ads_lawyer-list"
+                                         ad-event="click_lawyer-thumbnail" ad-label="9403-이재준" ad-delay="1000"
+                                         class="picture">
+                                        <img class="lawyer-profile"
+                                             th:src="${lawyer.lawyerUser.profileImgFilePath}">
+                                        <!--                                                 src="https://d2ai3ajp99ywjy.cloudfront.net/uploads/original/5e64b6fc9566c101e43e1b23-original.jpg?s=256x256">-->
+                                    </div>
+                                    <!---->
+                                </div>
+                            </a>
+
+                            <!-- 더 알아보기 -->
+                            <div class="more_btn text-center mt-5">
+                                <a th:href="@{/reservation/select_date(lawyerUserId=${lawyer.id})}"
+                                   class="hover:text-blue-400 lawyer-name text-sm border-b-2 border-gray-300 hover:border-blue-400">더
+                                    알아보기</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
@@ -208,6 +217,80 @@
 
         .click-button-box .btn:hover {
             background-color: #65aaf7;
+        }
+
+        @media (max-width: 360px) {
+            .content_item {
+                max-width: var(--m_width);
+            }
+
+            .m_banner_wrap {
+                margin: 0;
+            }
+
+            .banner-img-box {
+                height: 100px;
+            }
+
+            .banner-img-box > img {
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .text-grid > p {
+                margin: 40px 0 0 0;
+                font-size: 16px;
+                white-space: nowrap;
+            }
+
+            .lawyers-tab-wrapper {
+                margin-top: 0;
+                font-size: 14px;
+            }
+
+            .category {
+                flex-direction: column-reverse;
+                align-items: center;
+                text-align: center;
+            }
+
+            .lawyer-tit {
+                white-space: nowrap;
+                justify-content: center;
+                margin-top: 15px;
+            }
+            
+            .lawyer-tit .lawyer-status {
+                font-size: 12px;
+                margin-top: 5px;
+            }
+
+            .lawyer-tit .lawyer-status .lc-watch {
+                margin-top: -3px;
+                margin-left: 3px;
+            }
+
+            .lawyer-tit .watch-icon {
+                width: 13px;
+            }
+
+            .lawyerimg-box .more_btn {
+                display: none;
+            }
+
+            .m_bt_btn {
+                display: flex;
+                flex-direction: column-reverse;
+                margin-top: -10px;
+                margin-bottom: 5px;
+            }
+
+            .m_bt_btn .click-button-box {
+                align-self: center;
+                
+                
+            }
+            
         }
     </style>
 </div>

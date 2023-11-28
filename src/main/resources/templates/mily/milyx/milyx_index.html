@@ -15,186 +15,124 @@
         </div>
     </div>
 
-    <!--  배너  -->
-    <div class="main-banner-gird" style="transform: translateX(0%);">
-        <div class="max-w-full mx-auto flex justify-end items-end">
-            <div class="main-banner mx-auto">
+    <div class="content_item">
+      <!--  배너  -->
+      <div class="m_banner_wrap relative -mt-3">
+        <div class="mx-auto flex justify-end items-end">
+            <div class="mx-auto">
                 <!-- 이미지 -->
-                <div class="banner-img-box max-w-screen-lg">
+                <div class="banner-img-box">
                     <img src="https://d2nyk3ltml4doc.cloudfront.net/lawtalk/latest/images/0cb1e48e97121240a8a5.png"
-                         class="object-cover; vertical-align: bottom;" alt="main-img-1">
+                        class="object-cover; vertical-align: bottom;" alt="main-img-1">
                     <div class="text-grid">
-                        <p class="text">나와 비슷한 문제에 대한 답변을 찾아보세요!</p>
-                        <a class="text" th:if="${@rq.login}" th:href="@{milyx/create}" style="text-decoration: underline;">질문하기</a>
+                        <p class="m-36 text-3xl">나와 비슷한 문제에 대한 <span></span> 답변을 찾아보세요!</p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+      </div>
 
-    <!-- 상담글 4개 -->
-    <div class="question-grid-box mt-12">
-        <!-- 1 -->
-        <div class="question-box flex mb-3 border-b border-gray-300" th:each="milyx : ${milyx}">
-            <div class="question-list mt-3">
-                <div class="question-titleLine mt-3">
-                    <p class="title mt-3" style="color: rgb(122, 130, 135); font-size: 1rem;"
-                       th:text="${milyx.firstCategory.title}"></p>
-                    <a th:href="@{/milyx/detail/{id}(id=${milyx.id})}">
-                        <p class="list mt-3" style="color: rgb(43, 45, 47); font-size: 1.5rem; font-weight: 600;"
-                           th:text="${milyx.secondCategory.title}"></p>
-                    </a>
-                </div>
+      <div class="question-grid-box mt-4">
+          <div class="question-box flex mb-3 border-b pb-3" th:each="milyx : ${milyx}">
+              <div class="question-list mt-3">
+                  <div class="question-titleLine mt-3">
+                      <p class="title mt-3" style="color: rgb(122, 130, 135);"
+                        th:text="${milyx.firstCategory.title}"></p>
+                      <a th:href="@{/milyx/detail/{id}(id=${milyx.id})}">
+                          <p class="list mt-3" style="color: rgb(43, 45, 47); font-size: 20px; font-weight: 600;"
+                            th:text="${milyx.secondCategory.title}"></p>
+                      </a>
+                  </div>
 
-                <div class="text-answer flex" th:each="comment : ${milyx.comments}">
-                    <div class="case-answer" style="--tw-text-opacity: 1;
-color: rgba(96, 165, 250, var(--tw-text-opacity));">답변
-                    </div>
-                    <span class="case-answer__lawyer ml-2" th:if="${count > 0}"
-                          th:text="${comment.author.userName} + ' 변호사'">
-            </span>
-                </div>
+                  <div class="text-answer flex" th:each="comment : ${milyx.comments}">
+                      <div class="case-answer" style="color: rgba(96, 165, 250, 1);">답변</div>
+                      <span class="case-answer__lawyer ml-2" th:if="${count > 0}"
+                            th:text="${comment.author.userName} + ' 변호사'">
+                      </span>
+                  </div>
 
-                <div class="case-card__answer max-w-full mt-3" style="color: rgb(122, 130, 135); font-size: 1rem;"
-                     th:each="comment : ${milyx.comments}">
-                    <span th:if="${count > 0}" th:text="${comment.body}"></span>
-                </div>
+                  <div class="case-card__answer mt-3" style="color: rgb(122, 130, 135);"
+                      th:each="comment : ${milyx.comments}">
+                      <span th:if="${count > 0}" th:text="${comment.body}"></span>
+                  </div>
 
-                <div class="question-img-box gap-1 flex items-center mt-2 mb-5">
-                    <p class="text-box" style="color: rgb(159, 164, 169); font-size: 0.8rem;"
-                       th:if="${#lists.size(milyx.comments) == 0}" th:text="'변호사의 답변을 기다리는 중입니다.'"></p>
-                    <p class="text-box" style="color: rgb(159, 164, 169); font-size: 0.8rem;"
-                       th:if="${#lists.size(milyx.comments) > 0}"
-                       th:text="'변호사 답변 ' + ${#lists.size(milyx.comments)} + '개'"></p>
-                </div>
+                  <div class="question-img-box gap-1 flex items-center mt-2 mb-5">
+                      <p class="text-box" style="color: rgb(159, 164, 169); font-size: 0.8rem;"
+                        th:if="${#lists.size(milyx.comments) == 0}" th:text="'변호사의 답변을 기다리는 중입니다.'"></p>
+                      <p class="text-box" style="color: rgb(159, 164, 169); font-size: 0.8rem;"
+                        th:if="${#lists.size(milyx.comments) > 0}"
+                        th:text="'변호사 답변 ' + ${#lists.size(milyx.comments)} + '개'"></p>
+                  </div>
 
-                <!-- 조회수 -->
-                <div ng-if="stateName != 'main'" class="case-card__info flex justify-between">
-            <span class="viewCount" style="--tw-text-opacity: 1;
-color: rgba(107, 114, 128, var(--tw-text-opacity));">조회수<i class="number" th:text="' ' + ${milyx.view}"></i>
-            </span>
-                    <div th:each="comment : ${milyx.comments}">
-                        <!-- 시간답변 -->
-                        <span class="viewCount" style="--tw-text-opacity: 1;
-color: rgba(107, 114, 128, var(--tw-text-opacity));" th:if="${#lists.size(milyx.comments) != 0}"
-                              th:id="'createDate_' + ${comment.id}"
-                              th:text="${comment.createDate}"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
+                  <!-- 조회수 -->
+                  <div ng-if="stateName != 'main'" class="case-card__info flex justify-between">
+                      <span class="viewCount" style="--tw-text-opacity: 1;
+          color: rgba(107, 114, 128, var(--tw-text-opacity));">조회수<i class="number" th:text="' ' + ${milyx.view}"></i>
+                      </span>
+                      <div th:each="comment : ${milyx.comments}">
+                          <!-- 시간답변 -->
+                          <span class="viewCount" style="--tw-text-opacity: 1;
+  color: rgba(107, 114, 128, var(--tw-text-opacity));" th:if="${#lists.size(milyx.comments) != 0}"
+                                th:id="'createDate_' + ${comment.id}"
+                                th:text="${comment.createDate}"></span>
+                      </div>
+                  </div>
+              </div>
+          </div>
 
-        <style>
-            /* 폰트 설정 */
-    @font-face {
-      font-family: "GmarketSansMedium";
-      src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff")
-        format("woff");
-      font-weight: normal;
-      font-style: normal;
-    }
+          <style>
+            /* 배너 텍스트 */
+            .text-grid {
+              padding-top: 5px;
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              text-align: center;
+              color: #fff;
+              background-color: rgba(0, 0, 0, 0.2);
+            }
 
-    html > body {
-      font-family: "GmarketSansMedium";
-      text-underline-position: under;
-    }
+            .text {
+              color: #fff;
+              font-weight: 500;
+              font-size : 32px;
+            }
 
-    /* 노말라이즈 */
+            @media (max-width: 360px) {
+              .content_item {
+                max-width: var(--m_width);
+              }
 
-    /* 라이브러리 */
+              .banner-img-box {
+                height: 100px;
+              }
 
-    /* 커스텀 */
-    :root {
-      --site-width: 1280px;
-    }
+              .banner-img-box > img {
+                  height: 100%;
+                  object-fit: cover;
+              }
 
-    .con {
-      max-width: var(--site-width);
-    }
+              .text-grid > p {
+                margin: 33px 0 0 0;
+                font-size: 16px;
+              }
 
-    .search-box {
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
-
-    .main-banner {
-      /*   height: 500px; */
-    }
-
-    .category-box-icon {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 35px 85px;
-    }
-
-    .category-btn-box {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 85px;
-      cursor: pointer;
-    }
-
-    .main-btn {
-      background: rgba(43, 45, 47, 0.6);
-      border-radius: 100px;
-      width: 200px;
-      height: 50px;
-      bottom: 12px;
-    }
-
-    .banner-img-box > .main-btn > .btn-text {
-      /*   border: 1px solid red; */
-    }
-
-    /* 어떤 지역 변호사 버튼 */
-    .locationList-btn {
-      width: 150px;
-      height: 48px;
-      border: none;
-      background: #f7f7fa;
-      cursor: pointer;
-    }
-
-    .question-box {
-      width: 747px;
-      height: 100%;
-    }
-
-    /* 상담글/변호사사진 */
-    .question-img > img {
-      width: 24px;
-      height: 24px;
-      border-radius: 30%;
-      border: solid 2px #fff;
-    }
-
-    /* 배너 텍스트 */
-    .text-grid {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 100%;
-      max-width: 43.75rem;
-      text-align: center;
-      padding: 0 1rem;
-      font-size:3rem;
-    }
-
-    .text {
-      color: #fff;
-      font-weight: 500;
-      font-size : 32px;
-    }
-
-    .question-grid-box{
-      width : 1024px;
-    }
-    .question-box{
-      width : 1024px;
-    }
-        </style>
+              .text-grid span {
+                display: block;
+                margin-top: -13px;
+              }
+              
+              .case-card__answer > span {
+                max-width: var(--m_width) !important;
+                display: block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+            }
+          </style>
+      </div>
     </div>
 </div>
 </body>

@@ -4,7 +4,7 @@
     <title>마이 페이지 : MILY</title>
 </head>
 <body>
-<section layout:fragment="content" style="width: 1280px;">
+<section layout:fragment="content">
     <!--  메뉴바  -->
     <div id="header_menu" class="text-lg w-full fixed top-20 left-0 bg-white z-50 h-12 border-b pt-4">
         <div class="flex max-w-7xl m-auto justify-evenly">
@@ -22,7 +22,7 @@
             <div class="flex justify-center" style="width: 120px;">내 관심글</div>
             <div class="flex justify-center" style="width: 120px;">변호사 즐겨찾기</div>
         </div>
-        <div class="flex justify-evenly mb-12">
+        <div class="my_top_txt flex justify-evenly mb-12">
             <div class="flex justify-center" style="width: 120px;">0</div>
             <div class="flex justify-center" style="width: 120px;">0</div>
         </div>
@@ -114,10 +114,13 @@
     <style>
         .main {
             display: flex;
-            width: 640px;
+            width: 650px;
             justify-content: center;
             flex-direction: column;
-            margin: 128px 320px 96px;
+            margin: 100px auto 30px auto;
+            padding: 20px 40px 50px 40px;
+            border: 1px solid #75BDFF;
+            border-radius: 30px;
         }
         .main > .sub-text {
             display: flex;
@@ -125,7 +128,7 @@
             margin: 48px 0;
         }
         .large-text {
-            font-size: 32px;
+            font-size: 24px;
             font-weight: 600;
         }
         .regular-text {
@@ -149,6 +152,58 @@
         .my-info .info-last, .my-res .info-last {
             width: 100%;
             justify-content: space-between;
+        }
+
+        @media (max-width: 360px) {
+            .main {
+                display: flex;
+                max-width: var(--m_width);
+                justify-content: center;
+                flex-direction: column;
+                margin: 40px 0 30px 0;
+                padding: 0;
+                border: none;
+            }
+
+            .main > .sub-text {
+                margin: 20px 0 30px 0;
+            }
+
+            .large-text {
+                font-size: 20x;
+                font-weight: 600;
+            }
+
+            .my_top_txt {
+                margin: 15px 0;
+            }
+
+            .my-info .info-first > div:first-child,
+            .my-res .info-first > div:first-child {
+                margin-top: 15px;
+            }
+
+            .my-info .info-first,
+            .my-info .info-middle,
+            .my-info .info-last {
+                padding-bottom: 15px;
+                flex-direction: column;
+            }
+
+            .my-info div,
+            .my-info span {
+                margin: 0;
+            }
+
+            .my-res span {
+                margin: 0;
+            }
+
+            .my-res .info-first div,
+            .my-res .info-middle div {
+                margin: 7px 0;
+                padding-right: 2px;
+            }
         }
     </style>
 </section>

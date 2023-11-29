@@ -20,7 +20,7 @@
                          style="margin: 0 0 15px 30px; font-size: 14px;"></div>
                 </div>
                 <div>
-                    <img th:src="${user.lawyerUser.profileImgFilePath}" style="border: 1px solid #35373A; border-radius: 0 0 15px 15px; width: 768px; height: 460px;">
+                    <img th:src="${user.lawyerUser.profileImgFilePath}" style="border: 1px solid #35373A; border-radius: 0 0 15px 15px; width: 768px; height: 460px; object-fit: contain;">
                 </div>
             </div>
 
@@ -87,6 +87,11 @@
                     </div>
                 </div>
             </form>
+
+            <style>
+
+            </style>
+
             <script th:inline="javascript">
                 window.onload = function() {
                     let consultationButtons = document.querySelectorAll("#consultation30, #consultation60");
@@ -175,39 +180,41 @@
                     });
                 };
             </script>
-        </div>
-        <script>
-            $(document).ready(function() {
-                const formTag = $("#myForm");
-                const consultationInput = $("#consultation");
-                const selectedDateInput = $("#selectedDate");
-                const selectedTimeInput = $("#selectedTime");
 
-                [consultationInput, selectedDateInput, selectedTimeInput].forEach(function(input) {
-                    input.change(function() {
-                        let isAllSet = true;
-                        [consultationInput, selectedDateInput, selectedTimeInput].forEach(function(input) {
-                            if (!input.val()) {
-                                isAllSet = false;
+            <script>
+                $(document).ready(function() {
+                    const formTag = $("#myForm");
+                    const consultationInput = $("#consultation");
+                    const selectedDateInput = $("#selectedDate");
+                    const selectedTimeInput = $("#selectedTime");
+
+                    [consultationInput, selectedDateInput, selectedTimeInput].forEach(function(input) {
+                        input.change(function() {
+                            let isAllSet = true;
+                            [consultationInput, selectedDateInput, selectedTimeInput].forEach(function(input) {
+                                if (!input.val()) {
+                                    isAllSet = false;
+                                }
+                            });
+
+                            if (isAllSet) {
+                                const htmlToAdd = `
+                                    <div class="collapse collapse">
+                                        <input type="radio" name="my-accordion-2" checked="checked" />
+                                        <div class="collapse-title"></div>
+                                        <button class="collapse-content" type="submit" style="background-color: #75BDFF; padding: 10px 0; border-radius: 15px;">
+                                            <span style="color: #fff; font-size: 20px;">예약하기</span>
+                                        </button>
+                                    </div>
+                                `;
+                                $(".collapse-content:last").after(htmlToAdd);
                             }
                         });
-
-                        if (isAllSet) {
-                            const htmlToAdd = `
-                                <div class="collapse collapse">
-                                    <input type="radio" name="my-accordion-2" checked="checked" />
-                                    <div class="collapse-title"></div>
-                                    <button class="collapse-content" type="submit" style="background-color: #75BDFF; padding: 10px 0; border-radius: 15px;">
-                                        <span style="color: #fff; font-size: 20px;">예약하기</span>
-                                    </button>
-                                </div>
-                            `;
-                            $(".collapse-content:last").after(htmlToAdd);
-                        }
                     });
                 });
-            });
-        </script>
+            </script>
+        </div>
+        
     </div>
 </div>
 </body>

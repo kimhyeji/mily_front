@@ -7,99 +7,127 @@
 <body>
 <div layout:fragment="content">
 
-    <form class="mt-20" th:action="@{/user/estimate}" method="post" style="border: 1px solid #75bdff;">
-        <span>1차 카테고리</span>
-        <div>
-            <select name="firstCategory" id="firstCategory" class="my-2" style="border: 1px solid #c8c8c8;">
-                <option value="0" disabled selected>전체</option>
-                <option th:each="firstCategory : ${firstCategories}" th:text="${firstCategory.title}"
-                        th:value="${firstCategory.id}"></option>
-            </select>
+    <form class="mt-20" th:action="@{/user/estimate}" method="post" style="border: 1px solid #75bdff;" onsubmit="submitestimateForm(this); return false;">
+
+        <div class="fc_wrap">
+            <span>1차 카테고리</span>
+            <div id="firstCategory">
+                <div th:each="firstCategory : ${firstCategories}">
+                    <input type="checkbox" class="category-checkbox-1" th:id="'cat-' + ${firstCategory.id}" th:value="${firstCategory.id}" name="firstCategory">
+                    <label class="category-label" th:for="'cat-' + ${firstCategory.id}" th:text="${firstCategory.title}"></label>
+                </div>
+            </div>
+
+            <input class="fc_btn btn" value="선택완료">
         </div>
-        <span>2차 카테고리</span>
-        <div>
-            <select name="secondCategory" id="secondCategory" class="my-2" style="border: 1px solid #c8c8c8;">
-                <option value="0" disabled selected>대분류를 선택해주세요.</option>
-            </select>
+
+        <div class="pick_fc">dd</div>
+
+        <!-- 2차 카테고리 -->
+        <div class="sc_wrap">
+            <span>2차 카테고리</span>
+            <div id="secondCategory"></div>
+
+            <input class="sc_btn btn" value="선택완료">
         </div>
-        <div>
-            <select name="area" id="area" class="my-2" style="border: 1px solid #c8c8c8;">
-                <option value="0" disabled selected>지역은 선택해주세요.</option>
-                <option value="서울">서울</option>
-                <option value="경기">경기</option>
-                <option value="인천">인천</option>
-                <option value="세종">세종</option>
-                <option value="대전">대전</option>
-                <option value="대구">대구</option>
-                <option value="울산">울산</option>
-                <option value="광주">광주</option>
-                <option value="부산">부산</option>
-                <option value="제주">제주</option>
-                <option value="강원">강원</option>
-                <option value="경북">경북</option>
-                <option value="경남">경남</option>
-                <option value="충북">충북</option>
-                <option value="충남">충남</option>
-                <option value="전북">전북</option>
-                <option value="전남">전남</option>
-            </select>
+
+        <!-- 지역 선택 -->
+        <div class="area_wrap">
+            <span>지역 선택</span>
+            <div>
+                <input name="area" type="checkbox" value="서울">서울</input>
+                <input name="area" type="checkbox" value="경기">경기</input>
+                <input name="area" type="checkbox" value="인천">인천</input>
+                <input name="area" type="checkbox" value="세종">세종</input>
+                <input name="area" type="checkbox" value="대전">대전</input>
+                <input name="area" type="checkbox" value="대구">대구</input>
+                <input name="area" type="checkbox" value="울산">울산</input>
+                <input name="area" type="checkbox" value="광주">광주</input>
+                <input name="area" type="checkbox" value="부산">부산</input>
+                <input name="area" type="checkbox" value="제주">제주</input>
+                <input name="area" type="checkbox" value="강원">강원</input>
+                <input name="area" type="checkbox" value="경북">경북</input>
+                <input name="area" type="checkbox" value="경남">경남</input>
+                <input name="area" type="checkbox" value="충북">충북</input>
+                <input name="area" type="checkbox" value="충남">충남</input>
+                <input name="area" type="checkbox" value="전북">전북</input>
+                <input name="area" type="checkbox" value="전남">전남</input>
+            </div>
+
+            <input class="area_btn btn" value="선택완료">
         </div>
-        <span>하고싶은 말</span>
-        <div>
-            <textarea name="body" id="body" cols="30" rows="10"
-                      style="border: 1px solid #c8c8c8; width: 100%;"></textarea>
+
+        <!-- 하고싶은 말 -->
+        <div class="body_wrap">
+            <span>하고싶은 말</span>
+            <textarea name="body" id="body" cols="30" rows="10" style="border: 1px solid #c8c8c8; width: 100%;"></textarea>
         </div>
-        <div style="display: flex; justify-content: center;">
-            <input type="submit" value="보내기">
+
+        <!-- 보내기 버튼 -->
+        <div class="btn_wrap" style="display: flex; justify-content: center;">
+            <input type="submit" class="btn" value="보내기">
         </div>
     </form>
 
-    <!-- MilyUserController Line 186, @GetMapping("/estimate") -->
-    <!-- http://localhost:8090/user/estimate -->
 
-    <!-- 1차, 2차 카테고리 선택 후 작성하는 게 저장되는 것까지 -->
-    <div>
-        <div th:text="'데이터 뿌리기 : 1차,2차 카테고리 데이터 전부'" style="font-size: 32px; margin: 20px 0;"></div>
-        <!-- 1차, 2차 카테고리 전부 있는 테이블 -->
-        <table style="border: 1px solid green;">
-            <thead>
-            <tr>
-                <th>1차 ID</th>
-                <th>1차 카테고리</th>
-                <th>2차 ID</th>
-                <th>2차 카테고리</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="secondCategory: ${secondCategories}">
-                <td th:text="${secondCategory.firstCategory.id}"></td>
-                <td th:text="${secondCategory.firstCategory.title}"></td>
-                <td th:text="${secondCategory.id}"></td>
-                <td th:text="${secondCategory.title}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+    <script>
+        let submitestimateFormDone = false;
+        function submitestimateForm(form) {
+            if ( submitestimateFormDone ) return;
 
-    <script th:inline="javascript">
-        $('#firstCategory').change(function() {
-            var firstCategoryId = $(this).val();
+            form.body.value = form.body.value.trim();
 
-            $.ajax({
-                url: "/milyx/secondCategories",
-                method: 'GET',
-                data: { firstCategoryId: firstCategoryId },
-                success: function(data) {
-                    $("#secondCategory").empty();
-                    $.each(data, function (index, category) {
-                        const option = $("<option>", { value: category.id, text: category.title });
-                        $("#secondCategory").append(option);
-                    });
-                },
-                error: function(request,status,error){
-                    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                }
-            });
+            if ( form.body.value.length == 0 ) {
+                form.body.focus();
+                toastWarning('글을 작성해주세요.');
+                return;
+            }
+
+            form.submit();
+            submitestimateFormDone = true;
+        }
+
+        $('.category-checkbox-1').change(function() {
+            if(this.checked) {
+                var firstCategoryId = $(this).val();
+
+                // 선택값 나오게
+                var checkboxId = $(this).attr('id');
+                var labelTitle = $('label[for="' + checkboxId + '"]').text();
+                var pickFcDiv = $(".pick_fc");
+                pickFcDiv.empty();
+
+                pickFcDiv.append(labelTitle);
+
+                // 다른 체크박스 선택 해제
+                $('.category-checkbox-1').not(this).prop('checked', false);
+                $(".sc_wrap").css('display', 'block');
+
+                $.ajax({
+                    url: "/milyx/secondCategories",
+                    method: 'GET',
+                    data: { firstCategoryId: firstCategoryId },
+                    success: function(data) {
+
+                        var secondCategoryDiv = $("#secondCategory");
+                        secondCategoryDiv.empty();
+                        $.each(data, function (index, category) {
+                            var checkbox = $('<input>', { type: 'checkbox', class: 'category-checkbox-2', id: 'cat2-' + category.id, 'value': category.id , name : 'secondCategory' });
+                            var label = $('<label>', { class: 'category-label', for: 'cat2-' + category.id, text: category.title });
+                            secondCategoryDiv.append(checkbox).append(label);
+                        });
+                    },
+                    error: function(request,status,error){
+                        alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    }
+                });
+            } else {
+                // 체크박스 선택 해제 시 2차 카테고리 초기화
+                $("#secondCategory select").empty().append($('<option>', { value: "0", text: "대분류를 선택해주세요.", disabled: true, selected: true }));
+
+
+                $(".sc_wrap").css('display', 'none');
+            }
         });
     </script>
 </div>

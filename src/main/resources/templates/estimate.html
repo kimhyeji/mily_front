@@ -7,8 +7,18 @@
 <body>
 <div layout:fragment="content">
 
-    <form class="mt-20" th:action="@{/user/estimate}" method="post" style="border: 1px solid #75bdff;" onsubmit="submitestimateForm(this); return false;">
+    <form class="mt-20 p-10" th:action="@{/user/estimate}" method="post" style="border: 1px solid #75bdff;" onsubmit="submitestimateForm(this); return false;">
 
+        <!-- 1차 카테고리 텍스트 -->
+        <div class="pick_fc"></div>
+
+        <!-- 2차 카테고리 텍스트 -->
+        <div class="pick_sc"></div>
+
+        <!-- area 카테고리 텍스트 -->
+        <div class="pick_area"></div>
+
+        <!-- 1차 카테고리 -->
         <div class="fc_wrap">
             <span>1차 카테고리</span>
             <div id="firstCategory">
@@ -21,8 +31,6 @@
             <input class="fc_btn btn" value="선택완료">
         </div>
 
-        <div class="pick_fc">dd</div>
-
         <!-- 2차 카테고리 -->
         <div class="sc_wrap">
             <span>2차 카테고리</span>
@@ -34,24 +42,24 @@
         <!-- 지역 선택 -->
         <div class="area_wrap">
             <span>지역 선택</span>
-            <div>
-                <input name="area" type="checkbox" value="서울">서울</input>
-                <input name="area" type="checkbox" value="경기">경기</input>
-                <input name="area" type="checkbox" value="인천">인천</input>
-                <input name="area" type="checkbox" value="세종">세종</input>
-                <input name="area" type="checkbox" value="대전">대전</input>
-                <input name="area" type="checkbox" value="대구">대구</input>
-                <input name="area" type="checkbox" value="울산">울산</input>
-                <input name="area" type="checkbox" value="광주">광주</input>
-                <input name="area" type="checkbox" value="부산">부산</input>
-                <input name="area" type="checkbox" value="제주">제주</input>
-                <input name="area" type="checkbox" value="강원">강원</input>
-                <input name="area" type="checkbox" value="경북">경북</input>
-                <input name="area" type="checkbox" value="경남">경남</input>
-                <input name="area" type="checkbox" value="충북">충북</input>
-                <input name="area" type="checkbox" value="충남">충남</input>
-                <input name="area" type="checkbox" value="전북">전북</input>
-                <input name="area" type="checkbox" value="전남">전남</input>
+            <div id="areaCategory">
+                <input name="area" class="category-checkbox-3" type="checkbox" value="서울">서울</input>
+                <input name="area" class="category-checkbox-3" type="checkbox" value="경기">경기</input>
+                <input name="area" class="category-checkbox-3" type="checkbox" value="인천">인천</input>
+                <input name="area" class="category-checkbox-3" type="checkbox" value="세종">세종</input>
+                <input name="area" class="category-checkbox-3" type="checkbox" value="대전">대전</input>
+                <input name="area" class="category-checkbox-3" type="checkbox" value="대구">대구</input>
+                <input name="area" class="category-checkbox-3" type="checkbox" value="울산">울산</input>
+                <input name="area" class="category-checkbox-3" type="checkbox" value="광주">광주</input>
+                <input name="area" class="category-checkbox-3" type="checkbox" value="부산">부산</input>
+                <input name="area" class="category-checkbox-3" type="checkbox" value="제주">제주</input>
+                <input name="area" class="category-checkbox-3" type="checkbox" value="강원">강원</input>
+                <input name="area" class="category-checkbox-3" type="checkbox" value="경북">경북</input>
+                <input name="area" class="category-checkbox-3" type="checkbox" value="경남">경남</input>
+                <input name="area" class="category-checkbox-3" type="checkbox" value="충북">충북</input>
+                <input name="area" class="category-checkbox-3" type="checkbox" value="충남">충남</input>
+                <input name="area" class="category-checkbox-3" type="checkbox" value="전북">전북</input>
+                <input name="area" class="category-checkbox-3" type="checkbox" value="전남">전남</input>
             </div>
 
             <input class="area_btn btn" value="선택완료">
@@ -63,9 +71,13 @@
             <textarea name="body" id="body" cols="30" rows="10" style="border: 1px solid #c8c8c8; width: 100%;"></textarea>
         </div>
 
+
+
         <!-- 보내기 버튼 -->
-        <div class="btn_wrap" style="display: flex; justify-content: center;">
+        <div class="btn_wrap flex justify-between">
+            <input class="btn prev_btn" value="&lt 이전">
             <input type="submit" class="btn" value="보내기">
+            <input class="btn next_btn" value="다음 &gt">
         </div>
     </form>
 
@@ -87,7 +99,13 @@
             submitestimateFormDone = true;
         }
 
+        $('.category-checkbox-3').on('change', function() {
+            $('.category-checkbox-3').not(this).prop('checked', false);
+        });
+
         $('.category-checkbox-1').change(function() {
+            var pickFcDiv = $(".pick_fc");
+
             if(this.checked) {
                 var firstCategoryId = $(this).val();
 
@@ -101,7 +119,6 @@
 
                 // 다른 체크박스 선택 해제
                 $('.category-checkbox-1').not(this).prop('checked', false);
-                $(".sc_wrap").css('display', 'block');
 
                 $.ajax({
                     url: "/milyx/secondCategories",
@@ -109,11 +126,26 @@
                     data: { firstCategoryId: firstCategoryId },
                     success: function(data) {
 
+
                         var secondCategoryDiv = $("#secondCategory");
                         secondCategoryDiv.empty();
                         $.each(data, function (index, category) {
-                            var checkbox = $('<input>', { type: 'checkbox', class: 'category-checkbox-2', id: 'cat2-' + category.id, 'value': category.id , name : 'secondCategory' });
-                            var label = $('<label>', { class: 'category-label', for: 'cat2-' + category.id, text: category.title });
+                            var checkbox = $('<input>', {
+                                type: 'checkbox',
+                                class: 'category-checkbox-2',
+                                id: 'cat2-' + category.id,
+                                value: category.id,
+                                name: 'secondCategory',
+                                click: function() {
+                                    $('.category-checkbox-2').not(this).prop('checked', false);
+                                }
+                            });
+                            var label = $('<label>', {
+                                class: 'category-label',
+                                for: 'cat2-' + category.id,
+                                text: category.title
+                            });
+
                             secondCategoryDiv.append(checkbox).append(label);
                         });
                     },
@@ -123,10 +155,8 @@
                 });
             } else {
                 // 체크박스 선택 해제 시 2차 카테고리 초기화
-                $("#secondCategory select").empty().append($('<option>', { value: "0", text: "대분류를 선택해주세요.", disabled: true, selected: true }));
-
-
-                $(".sc_wrap").css('display', 'none');
+                $("#secondCategory").empty();
+                pickFcDiv.empty();
             }
         });
     </script>

@@ -28,7 +28,8 @@
                 </div>
             </div>
 
-            <input class="fc_btn btn" value="선택완료">
+            <input class="fc_btn btn btn-disabled" value="선택완료">
+
         </div>
 
         <!-- 2차 카테고리 -->
@@ -36,7 +37,8 @@
             <span>2차 카테고리</span>
             <div id="secondCategory"></div>
 
-            <input class="sc_btn btn" value="선택완료">
+            <input class="sc_wrap_prev_btn btn" value="&lt 이전">
+            <input class="sc_btn btn btn-disabled" value="선택완료">
         </div>
 
         <!-- 지역 선택 -->
@@ -62,7 +64,8 @@
                 <input name="area" class="category-checkbox-3" type="checkbox" value="전남">전남</input>
             </div>
 
-            <input class="area_btn btn" value="선택완료">
+            <input class="area_wrap_prev_btn btn" value="&lt 이전">
+            <input class="area_btn btn btn-disabled" value="선택완료">
         </div>
 
         <!-- 하고싶은 말 -->
@@ -71,15 +74,16 @@
             <textarea name="body" id="body" cols="30" rows="10" style="border: 1px solid #c8c8c8; width: 100%;"></textarea>
         </div>
 
-
-
         <!-- 보내기 버튼 -->
         <div class="btn_wrap flex justify-between">
-            <input class="btn prev_btn" value="&lt 이전">
-            <input type="submit" class="btn" value="보내기">
-            <input class="btn next_btn" value="다음 &gt">
+            <input class="btn_wrap_prev_btn btn" value="&lt 이전">
+            <input type="submit" class="body_btn btn btn-disabled" value="보내기">
         </div>
     </form>
+
+    <style>
+
+    </style>
 
 
     <script>
@@ -99,8 +103,68 @@
             submitestimateFormDone = true;
         }
 
+        // 시작할 때 모두 숨김
+        $('document').ready(function() {
+            $('.sc_wrap').css('display', 'none');
+            $('.area_wrap').css('display', 'none');
+            $('.body_wrap').css('display', 'none');
+            $('.btn_wrap').css('display', 'none');
+
+            $('#body').on('keyup', function() {
+                if ($(this).val()) {
+                    $('.body_btn').removeClass('btn-disabled');
+                }
+                else {
+                    $('.body_btn').addClass('btn-disabled');
+                }
+            });
+        });
+
+        // 1차에서 선택완료 버튼 클릭하면 2차로
+        $('.fc_btn').click(function() {
+            $('.sc_wrap').css('display', 'block');
+            $('.fc_wrap').css('display', 'none');
+        });
+
+        // 2차 이전 버튼 클릭하면 1차로
+        $('.sc_wrap_prev_btn').click(function() {
+            $('.fc_wrap').css('display', 'block');
+            $('.sc_wrap').css('display', 'none');
+        });
+
+        // area에서 이전 버튼 클릭하면 2차로
+        $('.area_wrap_prev_btn').click(function() {
+            $('.sc_wrap').css('display', 'block');
+            $('.area_wrap').css('display', 'none');
+        });
+
+        // area에서 선택완료 버튼 클릭하면 body로
+        $('.area_btn').click(function() {
+            $('.area_wrap').css('display', 'none');
+
+            $('.body_wrap').css('display', 'block');
+            $('.btn_wrap').css('display', 'block');
+        });
+
+        // body에서 이전 버튼 클릭하면 area로
+        $('.btn_wrap_prev_btn').click(function() {
+            $('.body_wrap').css('display', 'none');
+            $('.btn_wrap').css('display', 'none');
+
+            $('.area_wrap').css('display', 'block');
+        });
+
+        // area에서 체크 시 선택완료 버튼 활성화
         $('.category-checkbox-3').on('change', function() {
+            // 다른 체크박스 선택 해제
             $('.category-checkbox-3').not(this).prop('checked', false);
+
+            if (this.checked) {
+                $('.area_btn').removeClass('btn-disabled');
+            }
+            else {
+                $('.area_btn').addClass('btn-disabled');
+            }
         });
 
         $('.category-checkbox-1').change(function() {
@@ -114,19 +178,20 @@
                 var labelTitle = $('label[for="' + checkboxId + '"]').text();
                 var pickFcDiv = $(".pick_fc");
                 pickFcDiv.empty();
-
                 pickFcDiv.append(labelTitle);
+
 
                 // 다른 체크박스 선택 해제
                 $('.category-checkbox-1').not(this).prop('checked', false);
+
+                // 선택완료 시 버튼 활성화
+                $('.fc_btn').removeClass('btn-disabled');
 
                 $.ajax({
                     url: "/milyx/secondCategories",
                     method: 'GET',
                     data: { firstCategoryId: firstCategoryId },
                     success: function(data) {
-
-
                         var secondCategoryDiv = $("#secondCategory");
                         secondCategoryDiv.empty();
                         $.each(data, function (index, category) {
@@ -137,7 +202,14 @@
                                 value: category.id,
                                 name: 'secondCategory',
                                 click: function() {
+                                    // 다른 체크박스 선택 해제
                                     $('.category-checkbox-2').not(this).prop('checked', false);
+
+                                    if (this.checked) {
+                                        $('.sc_btn').removeClass('btn-disabled');
+                                    } else {
+                                        $('.sc_btn').addClass('btn-disabled');
+                                    }
                                 }
                             });
                             var label = $('<label>', {
@@ -147,6 +219,13 @@
                             });
 
                             secondCategoryDiv.append(checkbox).append(label);
+
+                            $('.sc_btn').click(function() {
+                                $('.area_wrap').css('display', 'block');
+                                $('.sc_wrap').css('display', 'none');
+                            });
+
+
                         });
                     },
                     error: function(request,status,error){
@@ -157,6 +236,9 @@
                 // 체크박스 선택 해제 시 2차 카테고리 초기화
                 $("#secondCategory").empty();
                 pickFcDiv.empty();
+
+                // 선택취소 시
+                $('.fc_btn').addClass('btn-disabled');
             }
         });
     </script>

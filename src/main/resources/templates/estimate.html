@@ -155,14 +155,20 @@
         });
 
         // area에서 체크 시 선택완료 버튼 활성화
-        $('.category-checkbox-3').on('change', function() {
+        $('.category-checkbox-3').change(function() {
             // 다른 체크박스 선택 해제
             $('.category-checkbox-3').not(this).prop('checked', false);
 
+            var selectedValue = $(this).val()
+
             if (this.checked) {
+                $('.pick_area').text(selectedValue);
+
                 $('.area_btn').removeClass('btn-disabled');
             }
             else {
+                $('.pick_area').empty();
+
                 $('.area_btn').addClass('btn-disabled');
             }
         });
@@ -175,7 +181,7 @@
 
                 // 선택값 나오게
                 var checkboxId = $(this).attr('id');
-                var labelTitle = $('label[for="' + checkboxId + '"]').text();
+                var labelTitle = $('label[for="' + checkboxId + '"]').text();https://chat.openai.com/c/be423c0f-0873-44f6-875e-04a5e41e2bef
                 var pickFcDiv = $(".pick_fc");
                 pickFcDiv.empty();
                 pickFcDiv.append(labelTitle);
@@ -202,6 +208,12 @@
                                 value: category.id,
                                 name: 'secondCategory',
                                 click: function() {
+                                    var checkboxId = $(this).attr('id');
+                                    var labelTitle = $('label[for="' + checkboxId + '"]').text();
+                                    var pickFcDiv = $(".pick_sc");
+                                    pickFcDiv.empty();
+                                    pickFcDiv.append(labelTitle);
+
                                     // 다른 체크박스 선택 해제
                                     $('.category-checkbox-2').not(this).prop('checked', false);
 

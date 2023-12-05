@@ -1086,7 +1086,7 @@
         }
 
         @media (max-width: 360px) {
-            
+
 
             .m_first {
                 margin-top: 10px;
@@ -1257,7 +1257,7 @@
 
             .question-box  .question-titleLine > .title {
                 font-size: 13px !important;
-                margin-left: 10px;   
+                margin-left: 10px;
             }
 
             .question-box .question-titleLine .list {
@@ -1333,24 +1333,22 @@
         });
 
         $('document').ready(function() {
-            $('.start').css('display','none');
+            $('.start').hide();
         });
 
+        // Start autoplay
         $('.start').on('click', function() {
           swiper.autoplay.start();
-
-          $('.start').css('display','none');
-          $('.stop').css('display','block');
-
+          $('.start').hide();
+          $('.stop').show();
           return false;
         });
 
+        // Stop autoplay
         $('.stop').on('click', function() {
           swiper.autoplay.stop();
-
-          $('.start').css('display','block');
-          $('.stop').css('display','none');
-
+          $('.stop').hide();
+          $('.start').show();
           return false;
         });
     </script>
